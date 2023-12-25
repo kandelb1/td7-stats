@@ -1,0 +1,18 @@
+@import '../../variables';
+
+.teamBox {
+  border: 1px solid $red;
+  border-radius: 10px;
+  padding: 10px;
+  width: 20%;
+  text-align: center;
+
+  h1 {
+    font-size: 150%;
+  }
+
+  &:hover {  
+    border: 1px solid $light-blue;
+    cursor: pointer;
+  }
+}

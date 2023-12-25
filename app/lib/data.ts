@@ -1,0 +1,93 @@
+import sqlite3 from 'sqlite3'
+import { Database, open } from 'sqlite'
+import { MapStats, Team, TeamInfo } from './definitions';
+
+let db: Database<sqlite3.Database, sqlite3.Statement>;
+
+console.log('data.ts running');
+
+
+export async function getTeamsList(): Promise<Team[]> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+
+  const teamsList = await db.all<Team[]>("SELECT * FROM teams");
+  return teamsList;
+}
+
+export async function getTeamInfo(id: string): Promise<TeamInfo> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+  console.log('getting team info for id ' + id);
+
+  let teamInfo = await db.get("SELECT captain, name, (\
+                              SELECT count(1) FROM team_stats\
+                              WHERE team_id == ? AND team_stats.score > team_stats.enemy_score\
+                            ) AS wins, (\
+                              SELECT count(1) FROM team_stats\
+                              WHERE team_id == ? AND team_stats.score < team_stats.enemy_score\
+                            ) AS losses FROM teams WHERE id == ?", id, id, id);
+
+  let matches = await db.all("SELECT week, score, teams.name AS enemy, enemy_score AS enemyScore FROM matches\
+                          INNER JOIN teams ON matches.enemy_team_id == teams.id\
+                          WHERE matches.team_id == ?", id);
+
+  let games = await db.all("SELECT games.week, games.id, maps.name AS map, team_stats.score, team_stats.enemy_score AS enemyScore FROM games\
+                        INNER JOIN maps ON games.map_id == maps.id\
+                        INNER JOIN team_stats ON team_stats.game_id == games.id\
+                        WHERE team_stats.team_id == ?", id);
+
+
+  let players = await db.all("SELECT x.id, (\
+                              SELECT name FROM player_names\
+                              WHERE player_names.player_id == x.id\
+                              GROUP BY name\
+                              ORDER BY count(1) DESC\
+                              LIMIT 1\
+                            ) AS name, players.round_pick AS round\
+                            FROM (SELECT id FROM players WHERE players.team_id == ?) x\
+                            INNER JOIN players ON players.id == x.id\
+                            ORDER BY round", id);
+  
+  // TODO: is it possible to integrate this into the sql statement above?
+  for(let i = 0; i < players.length; i++) {
+    let player_id = players[i]['id'];
+    players[i]['aliases'] = await db.all("SELECT name FROM player_names\
+                                        WHERE player_names.player_id == ?\
+                                        GROUP BY name", player_id);
+  }
+
+  let mapStats = await db.all("SELECT x.id, x.name, (\
+                              SELECT count(1) FROM team_stats\
+                              INNER JOIN games ON team_stats.game_id == games.id AND games.map_id == x.id\
+                              WHERE score > enemy_score AND team_id == ?\
+                            ) AS wins, (\
+                              SELECT count(1) FROM team_stats\
+                              INNER JOIN games ON team_stats.game_id == games.id AND games.map_id == x.id\
+                              WHERE score < enemy_score AND team_id == ?\
+                            ) AS losses\
+                            FROM (SELECT * FROM maps) x", id, id);
+
+  let answer: TeamInfo = {
+    teamName: teamInfo['name'],
+    captain: teamInfo['captain'],
+    wins: teamInfo['wins'],
+    losses: teamInfo['losses'],
+    matches: matches,
+    games: games,
+    players: players,
+    mapStats: mapStats,
+  }
+
+  return answer;
+}
