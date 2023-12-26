@@ -1,7 +1,9 @@
 .teamsList {
   display: flex;
   flex-flow: column nowrap;
+  justify-content: center;
   align-items: center;
-  vertical-align: center;
   row-gap: 10px;
+  // border: 1px solid blue;
+  // width: 50em;
 }

@@ -8,6 +8,7 @@ export default function Home() {
       <div className={styles.test}>
         <h1>This is the home page.</h1>
         <Link href="/teams">Teams</Link>
+        <Link href="/players">Players</Link>
         <Link href="/nowhere">Blah Blah</Link>
       </div>
     </main>

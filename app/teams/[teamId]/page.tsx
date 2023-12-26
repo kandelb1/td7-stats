@@ -1,6 +1,7 @@
 import { getTeamInfo } from '@/app/lib/data';
 import styles from './page.module.scss'
 import TeamMapChart from '@/app/components/TeamMapChart/TeamMapChart';
+import { notFound } from 'next/navigation';
 
 interface IProps{
   params: {
@@ -10,7 +11,8 @@ interface IProps{
 
 export default async function Team(props: IProps){
   const teamInfo = await getTeamInfo(props.params.teamId);
-  // console.log(teamInfo);
+  if(!teamInfo) { notFound(); }
+  
   return (
     <div className={styles.chart}>
       <p>hi im teamId {props.params.teamId}</p>

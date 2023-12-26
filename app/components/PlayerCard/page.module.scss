@@ -1,0 +1,11 @@
+@import '../../variables';
+
+.playerBox {
+  border: 1px solid transparent;
+  border-radius: 3px;
+  
+  &:hover {
+    cursor: pointer;
+    border: 1px solid $gray;
+  }
+}

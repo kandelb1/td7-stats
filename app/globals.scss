@@ -32,6 +32,7 @@ footer, header, hgroup, menu, nav, section {
 
 body {
 	line-height: 1;
+  // overflow: hidden;
 }
 
 ol, ul {
@@ -51,4 +52,37 @@ q:before, q:after {
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+
+// quake live colors
+.ql1 {
+  color: #fe0000;
+}
+
+.ql2 {
+  color: #00fe00;
+}
+
+.ql3 {
+  color: #fefe00;
+}
+
+.ql4 {
+  color: #3266fe;
+}
+
+.ql5 {
+  color: #00fefe;
+}
+
+.ql6 {
+  color: #fe00fe
+}
+
+.ql7 {
+  color: #fefefe;
+}
+
+.ql0 {
+  color: #000000;
 }

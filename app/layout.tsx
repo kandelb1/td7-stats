@@ -1,4 +1,5 @@
 import './globals.scss'
+import styles from './page.module.scss';
 
 export default function RootLayout({
   children,
@@ -7,7 +8,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className={styles.topLevelDiv}>
+          {children}
+        </div>
+      </body>
     </html>
   )
 }
