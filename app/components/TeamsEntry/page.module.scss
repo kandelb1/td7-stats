@@ -3,16 +3,46 @@
 .teamBox {
   border: 1px solid $red;
   border-radius: 10px;
-  padding: 10px;
-  // width: 100%;
+  width: 40em;
+  height: 15em;
   text-align: center;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
 
-  h1 {
-    font-size: 150%;
+  a {
+    text-decoration: none;
+    color: inherit;
   }
 
-  &:hover {  
-    border: 1px solid $light-blue;
-    cursor: pointer;
+  .captainBox {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 2em;
+    // justify-content: flex-start;
+    align-self: flex-start;
+
+    h1 {
+      font-size: 150%;
+    }
   }
+
+  .rosterContainer {
+    display: flex;
+    flex-flow: row wrap;
+    // border: 1px solid green;
+    width: 80%;
+    height: 80%;
+    gap: 10px;
+
+    .playerBox {
+      // border: 1px solid red;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      min-width: 8em;
+    }
+  }
+  
 }

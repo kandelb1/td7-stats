@@ -1,9 +1,8 @@
-.teamsList {
+.teamsContainer {
   display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
+  flex-flow: row nowrap;
+  width: 100%;
   align-items: center;
-  row-gap: 10px;
-  // border: 1px solid blue;
-  // width: 50em;
+  justify-content: space-around;
+  border: 1px solid green;
 }

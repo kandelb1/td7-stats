@@ -1,12 +1,92 @@
-.topLevelDiv {
-  border: 1px solid yellow;
-  display: flex;
-  justify-content: center;
-  height: 100vh;
-}
+@import './variables';
 
-.test {
+.body {
   display: flex;
   flex-flow: column nowrap;
-  text-align: center;
+  align-items: center;
+  background-image: url('../public/ql_bg1.jpg');
+  background-color: #273f57;
+  background-position: center top;
+  background-repeat: no-repeat;
+
+  .header {    
+    display: flex;
+    flex-flow: column nowrap; // works!
+    color: $gray;
+    // border: 1px solid green;
+
+    .topBar {
+      width: 1000px;
+      height: 103px;
+      background-image: url('../public/ql_top_bar.png');
+
+      display: flex;
+      justify-content: space-between;
+
+      .playerProfile {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        margin-right: 20px;
+        background-color: transparent;
+
+        p {
+          background-color: transparent;
+        }
+      }
+
+      .logo {
+        background-color: transparent;
+      }
+    }
+
+    .navBar {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      gap: 1em;
+      background-color:rgb(33, 34, 34);
+      height: 2em;
+
+      a {
+        // font-family: HandelGothic;
+        text-decoration: none;
+        color: $gray;
+        &:hover {
+          background-color: black;
+        }
+      }
+    }
+  }
+
+  .topLevelDiv {
+    // border: 1px solid yellow;
+    display: flex;
+    justify-content: center;
+
+    background: url('../public/body_bg1.jpg') no-repeat scroll 0 0 #FFFFFF;
+    width: 1000px;
+    min-height: 700px;
+    // color: $red;
+
+    .test {
+      display: flex;
+      flex-flow: column nowrap;
+      text-align: center;
+      height: 100%;
+      width: 100%;
+    }
+
+  }
+
+  .footer {
+    width: 1000px;
+    height: 93px;
+    background-color: #cccccc;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+   
 }

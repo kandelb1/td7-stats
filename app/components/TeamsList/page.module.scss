@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 100%;
+  // justify-content: flex-start;
+  // border: 1px solid yellow;
+  margin-top: 1em;
+  gap: 2em;
+
+  .buttonContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    
+    input {
+      border: none;
+      text-align: center;
+      // text-decoration: none;
+      width: 110px;
+      height: 30px;
+      line-height: 27px;
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+      outline: none;
+      border-radius: 8px;
+    }
+  
+    .red {
+      background-color: #aa1113;
+      border-bottom: 3px solid #760C0F;
+      
+      &:hover {
+        background-color: #E91D22;
+        cursor: pointer;
+      }
+    }
+
+    .redSelected {
+      background-color: #E91D22;
+    }
+  
+    .blue {
+      background-color: #1b11aa;
+      border-bottom: 3px solid #0c0e76;
+      
+      &:hover {
+        background-color: #1d20e9;
+        cursor: pointer;
+      }
+    }
+    
+    .blueSelected {
+      background-color: #1d20e9;
+    }
+  }
+}

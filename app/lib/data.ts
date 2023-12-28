@@ -17,6 +17,13 @@ export async function getTeamsList(): Promise<Team[]> {
   }
 
   const teamsList = await db.all<Team[]>("SELECT * FROM teams");
+  // TODO: this will need to change when round_pick is removed from the db
+  for(let i = 0; i < teamsList.length; i++){
+    const roster = await db.all("SELECT id, name, round_pick AS round FROM players\
+                                WHERE team_id == ? AND round != 0\
+                                ORDER BY round", teamsList[i].id);
+    teamsList[i].roster = roster;
+  }
   return teamsList;
 }
 

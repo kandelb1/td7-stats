@@ -4,13 +4,10 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <main>
-      <div className={styles.test}>
-        <h1>This is the home page.</h1>
-        <Link href="/teams">Teams</Link>
-        <Link href="/players">Players</Link>
-        <Link href="/nowhere">Blah Blah</Link>
-      </div>
-    </main>
+    // <main> tag used to be top level here
+    <div className={styles.test}>
+      <h1>This is the home page.</h1>
+      <h2>Home page stuff goes here</h2>
+    </div>
   )
 }
