@@ -2,12 +2,6 @@ import Link from 'next/link';
 import './globals.scss'
 import styles from './page.module.scss';
 import Image from "next/image";
-import localFont from 'next/font/local';
-
-
-// const handelGothic = localFont({
-//   src: './fonts/Handel-Gothic-Regular.ttf',
-// });
 
 export default function RootLayout({
   children,
