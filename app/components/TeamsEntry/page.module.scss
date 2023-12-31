@@ -4,7 +4,7 @@
   border: 1px solid $red;
   border-radius: 10px;
   width: 40em;
-  height: 15em;
+  height: 20em;
   text-align: center;
   display: flex;
   flex-flow: column nowrap;
@@ -15,17 +15,8 @@
     color: inherit;
   }
 
-  .captainBox {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    gap: 2em;
-    // justify-content: flex-start;
-    align-self: flex-start;
-
-    h1 {
-      font-size: 150%;
-    }
+  h1 {
+    font-size: 150%;
   }
 
   .rosterContainer {

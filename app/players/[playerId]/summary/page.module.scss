@@ -1,0 +1,108 @@
+.summaryContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+
+  .topContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    // align-items: center;
+    justify-content: center;
+    gap: 1em;
+    width: 100%;
+    
+    .vitalStats {
+      margin-top: 1em;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      flex: 1;
+      // background-color: rgb(161, 161, 161);
+      border: 1px solid black;
+      box-shadow: 10px 5px 5px gray;
+    }
+  
+    .recentAwards {
+      margin-top: 1em;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      flex: 1;
+      // background-color: rgb(161, 161, 161);
+      border: 1px solid black;
+      box-shadow: 10px 5px 5px gray;
+  
+      .awardBox {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        width: 100%;
+  
+        .textBox {
+          display: flex;
+          flex-flow: column nowrap;
+          text-align: center;
+          width: 100%;
+  
+          h2 {
+            font-size: 125%;
+          }
+        }
+      }
+    }
+  }
+
+  .recentMatches {
+    margin-top: 1em;
+    width: 100%; 
+
+    .matchesContainer {
+      display: flex;
+      flex-flow: row nowrap;
+      gap: 10px;
+
+      .match {
+        width: 192px;
+        height: 108px;
+        background-image: url('/levelshots/campgrounds.jpg');
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 320px 180px;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-end;
+        text-align: center;
+
+        p {
+          background-color: rgba(255, 255, 255, 0.5);
+          width: 100%;
+          // color: white;
+        }
+
+        img {
+          position: relative;
+          top: 32px;
+        }
+      }
+    }
+  }
+
+  .recentCompetitors {
+    margin-top: 1em;
+    width: 100%;
+    // border: 1px solid yellow;
+
+    .competitorsContainer {
+      margin-top: 1em;
+      display: flex;
+      flex-flow: row wrap;      
+      gap: 10px;
+
+      .competitor {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+      }
+    }
+  }
+}

@@ -19,12 +19,9 @@ export default function TeamsEntry(props: IProps) {
 
   return (
     <div className={styles.teamBox}>
-      <div className={styles.captainBox}>
-        <Link href={`/teams/${team.id}`}>
-          <h1>{team.name}</h1>
-        </Link>
-        <p>{team.captain}</p>
-      </div>
+      <Link href={`/teams/${team.id}`}>
+        <h1>{team.name}</h1>
+      </Link>
       <div className={styles.rosterContainer}>
         {team.roster.map(p => {
           return (

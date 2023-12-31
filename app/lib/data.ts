@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { Database, open } from 'sqlite'
-import { Player, Team, TeamInfo, PlayerInfo } from './definitions';
+import { Player, Team, TeamInfo, PlayerInfo, PlayerSummary } from './definitions';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>;
 
@@ -19,9 +19,9 @@ export async function getTeamsList(): Promise<Team[]> {
   const teamsList = await db.all<Team[]>("SELECT * FROM teams");
   // TODO: this will need to change when round_pick is removed from the db
   for(let i = 0; i < teamsList.length; i++){
-    const roster = await db.all("SELECT id, name, round_pick AS round FROM players\
-                                WHERE team_id == ? AND round != 0\
-                                ORDER BY round", teamsList[i].id);
+    const roster = await db.all("SELECT id, name FROM players\
+                                WHERE teamId == ?\
+                                ORDER BY name", teamsList[i].id);
     teamsList[i].roster = roster;
   }
   return teamsList;
@@ -46,60 +46,57 @@ export async function getTeamInfo(id: string): Promise<TeamInfo | null> {
     return null;
   }
 
-  let teamInfo = await db.get("SELECT captain, name, (\
-                              SELECT count(1) FROM team_stats\
-                              WHERE team_id == ? AND team_stats.score > team_stats.enemy_score\
+  let teamInfo = await db.get("SELECT name, (\
+                              SELECT count(1) FROM tgStats\
+                              WHERE teamId == ? AND tgStats.score > tgStats.enemyScore\
                             ) AS wins, (\
-                              SELECT count(1) FROM team_stats\
-                              WHERE team_id == ? AND team_stats.score < team_stats.enemy_score\
+                              SELECT count(1) FROM tgStats\
+                              WHERE teamId == ? AND tgStats.score < tgStats.enemyScore\
                             ) AS losses FROM teams WHERE id == ?", id, id, id);
 
-  let matches = await db.all("SELECT week, score, teams.name AS enemy, enemy_score AS enemyScore FROM matches\
-                          INNER JOIN teams ON matches.enemy_team_id == teams.id\
-                          WHERE matches.team_id == ?", id);
+  // let matches = await db.all("SELECT week, score, teams.name AS enemy, enemy_score AS enemyScore FROM matches\
+  //                         INNER JOIN teams ON matches.enemy_teamId == teams.id\
+  //                         WHERE matches.teamId == ?", id);
 
-  let games = await db.all("SELECT games.week, games.id, maps.name AS map, team_stats.score, team_stats.enemy_score AS enemyScore FROM games\
-                        INNER JOIN maps ON games.map_id == maps.id\
-                        INNER JOIN team_stats ON team_stats.game_id == games.id\
-                        WHERE team_stats.team_id == ?", id);
+  let games = await db.all("SELECT games.id, maps.name AS map, tgStats.score, tgStats.enemyScore FROM games\
+                        INNER JOIN maps ON games.mapId == maps.id\
+                        INNER JOIN tgStats ON tgStats.gameId == games.id\
+                        WHERE tgStats.teamId == ?", id);
 
 
   let players = await db.all("SELECT x.id, (\
-                              SELECT name FROM player_names\
-                              WHERE player_names.player_id == x.id\
+                              SELECT name FROM playerNames\
+                              WHERE playerNames.playerId == x.id\
                               GROUP BY name\
                               ORDER BY count(1) DESC\
                               LIMIT 1\
-                            ) AS name, players.round_pick AS round\
-                            FROM (SELECT id FROM players WHERE players.team_id == ?) x\
-                            INNER JOIN players ON players.id == x.id\
-                            ORDER BY round", id);
+                            ) AS name\
+                            FROM (SELECT id FROM players WHERE players.teamId == ?) x\
+                            INNER JOIN players ON players.id == x.id", id);
   
   // TODO: is it possible to integrate this into the sql statement above?
   for(let i = 0; i < players.length; i++) { // TODO: Player type doesn't have an 'aliases' property anymore
-    let player_id = players[i]['id'];
-    players[i]['aliases'] = await db.all("SELECT name FROM player_names\
-                                        WHERE player_names.player_id == ?\
-                                        GROUP BY name", player_id);
+    let playerId = players[i]['id'];
+    players[i]['aliases'] = await db.all("SELECT name FROM playerNames\
+                                        WHERE playerNames.playerId == ?\
+                                        GROUP BY name", playerId);
   }
 
   let mapStats = await db.all("SELECT x.id, x.name, (\
-                              SELECT count(1) FROM team_stats\
-                              INNER JOIN games ON team_stats.game_id == games.id AND games.map_id == x.id\
-                              WHERE score > enemy_score AND team_id == ?\
+                              SELECT count(1) FROM tgStats\
+                              INNER JOIN games ON tgStats.gameId == games.id AND games.mapId == x.id\
+                              WHERE score > enemyScore AND teamId == ?\
                             ) AS wins, (\
-                              SELECT count(1) FROM team_stats\
-                              INNER JOIN games ON team_stats.game_id == games.id AND games.map_id == x.id\
-                              WHERE score < enemy_score AND team_id == ?\
+                              SELECT count(1) FROM tgStats\
+                              INNER JOIN games ON tgStats.gameId == games.id AND games.mapId == x.id\
+                              WHERE score < enemyScore AND teamId == ?\
                             ) AS losses\
                             FROM (SELECT * FROM maps) x", id, id);
 
   let answer: TeamInfo = {
     teamName: teamInfo['name'],
-    captain: teamInfo['captain'],
     wins: teamInfo['wins'],
     losses: teamInfo['losses'],
-    matches: matches,
     games: games,
     players: players,
     mapStats: mapStats,
@@ -117,8 +114,8 @@ export async function getPlayerList(): Promise<Player[]> {
     });
   }
   
-  let result = await db.all<Player[]>("SELECT id, name, round_pick AS round, team_id AS teamId FROM players\
-                                       ORDER BY teamId, round");
+  let result = await db.all<Player[]>("SELECT id, name, teamId FROM players\
+                                       ORDER BY teamId, name");
   return result;
 }
 
@@ -141,36 +138,35 @@ export async function getPlayerInfo(id: string): Promise<PlayerInfo | null> {
     return null;
   }
 
-  let basicInfo = await db.get("SELECT players.id, teams.name AS teamName, players.name, players.round_pick AS round,\
-                                players.team_id AS teamId FROM players\
-                                INNER JOIN teams ON players.team_id == teams.id\
+  let basicInfo = await db.get("SELECT players.id, teams.name AS teamName, players.name, players.teamId FROM players\
+                                INNER JOIN teams ON players.teamId == teams.id\
                                 WHERE players.id == ?", id);
 
-  let aliases = await db.all("SELECT name FROM player_names\
-                              WHERE player_id == ?\
+  let aliases = await db.all("SELECT name FROM playerNames\
+                              WHERE playerId == ?\
                               GROUP BY name\
                               ORDER BY count(1) DESC", id);
 
-  let totalWeapStats = await db.all("SELECT weapon_name AS weaponName, sum(damage) AS damage, sum(kills) AS kills,\
-                                    sum(shots_fired) AS shotsFired, sum(shots_hit) AS shotsHit,\
-                                    CAST(sum(shots_hit) AS float) / sum(shots_fired) * 100 AS accuracy FROM pw_stats\
-                                    INNER JOIN players ON player_id == players.id\
-                                    WHERE player_id == ?\
-                                    GROUP BY weapon_name", id);
+  let totalWeapStats = await db.all("SELECT weaponName, sum(damage) AS damage, sum(kills) AS kills,\
+                                    sum(shotsFired) AS shotsFired, sum(shotsHit) AS shotsHit,\
+                                    CAST(sum(shotsHit) AS float) / sum(shotsFired) * 100 AS accuracy FROM pwStats\
+                                    INNER JOIN players ON playerId == players.id\
+                                    WHERE playerId == ?\
+                                    GROUP BY weaponName", id);
 
-  let avgDamages = await db.get("SELECT round(avg(damage_dealt), 2) AS averageDamageDealt, round(avg(damage_taken), 2) AS averageDamageTaken,\
-                          round(avg(damage_dealt) - avg(damage_taken), 2) AS netDamage FROM pg_stats\
-                          WHERE player_id == ?", id);
+  let avgDamages = await db.get("SELECT round(avg(damageDealt), 2) AS averageDamageDealt, round(avg(damageTaken), 2) AS averageDamageTaken,\
+                          round(avg(damageDealt) - avg(damageTaken), 2) AS netDamage FROM pgStats\
+                          WHERE playerId == ?", id);
 
-  let games = await db.all("SELECT games.id, games.week, maps.name AS map, team_stats.score AS teamScore, team_stats.enemy_score AS enemyTeamScore,\
-                          pg_stats.rank, pg_stats.score AS playerScore, pg_stats.damage_dealt AS damageDealt, pg_stats.damage_taken AS damageTaken,\
-                          pg_stats.kills, pg_stats.deaths FROM pg_stats\
+  let games = await db.all("SELECT games.id, games.date, maps.name AS map, tgStats.score AS teamScore, tgStats.enemyScore AS enemyTeamScore,\
+                          pgStats.rank, pgStats.score AS playerScore, pgStats.damageDealt, pgStats.damageTaken,\
+                          pgStats.kills, pgStats.deaths FROM pgStats\
                           INNER JOIN players ON players.id == ?\
-                          INNER JOIN games ON pg_stats.game_id == games.id\
-                          INNER JOIN team_stats ON team_stats.game_id == games.id AND players.team_id == team_stats.team_id\
-                          INNER JOIN maps ON games.map_id == maps.id\
-                          WHERE pg_stats.player_id == ?\
-                          ORDER BY week", id, id);
+                          INNER JOIN games ON pgStats.gameId == games.id\
+                          INNER JOIN tgStats ON tgStats.gameId == games.id AND players.teamId == tgStats.teamId\
+                          INNER JOIN maps ON games.mapId == maps.id\
+                          WHERE pgStats.playerId == ?\
+                          ORDER BY date DESC", id, id);
 
   let answer: PlayerInfo = {
     ...basicInfo,
@@ -181,4 +177,54 @@ export async function getPlayerInfo(id: string): Promise<PlayerInfo | null> {
   };
   
   return answer;
+}
+
+export async function getPlayerSummary(id: string): Promise<PlayerSummary | null> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+
+  // check if this playerId exists before doing anything
+  let validPlayerId = await db.get("SELECT EXISTS(\
+                                      SELECT 1 FROM players\
+                                      WHERE id == ?\
+                                    ) AS valid", id);
+  if(validPlayerId['valid'] == 0) { // stop now
+    console.error(`Ignoring invalid playerId: ${id}`);
+    return null;
+  }
+  
+  let summary = await db.get("SELECT a.damageDealt, a.damageTaken, b.shots, b.hits, c.wins, d.losses FROM\
+                (\
+                  SELECT sum(damageDealt) AS damageDealt, sum(damageTaken) AS damageTaken FROM pgStats\
+                  WHERE playerId == ?\
+                ) AS a,\
+                (\
+                  SELECT sum(shotsFired) AS shots, sum(shotsHit) AS hits FROM pwStats\
+                  WHERE playerId == ?\
+                ) as b,\
+                (\
+                  SELECT count(1) AS wins FROM tgStats\
+                  WHERE gameId IN (\
+                    SELECT gameId FROM pgStats WHERE playerId == ?\
+                  ) AND teamId == (\
+                    SELECT teamId FROM players WHERE id == ?\
+                  )\
+                  AND score > enemyScore\
+                ) AS c,\
+                (\
+                  SELECT count(1) AS losses FROM tgStats\
+                  WHERE gameId IN (\
+                    SELECT gameId FROM pgStats WHERE playerId == ?\
+                  ) AND teamId == (\
+                    SELECT teamId FROM players WHERE id == ?\
+                  )\
+                  AND score < enemyScore\
+                ) AS d", id, id, id, id, id, id);
+
+  return summary;
 }

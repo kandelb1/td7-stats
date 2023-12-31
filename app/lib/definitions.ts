@@ -1,6 +1,5 @@
 export type Team = {
   id: number;
-  captain: string;
   name: string;
   roster: {id: number; name: string;}[];
 };
@@ -11,7 +10,6 @@ export type Map = {
 };
 
 export type Game = {
-  week: number; // TODO: might change
   id: number;
   map: string;
   score: number;
@@ -19,17 +17,16 @@ export type Game = {
 }
 
 // TODO: unsure how td7 matchups and scoring works yet
-export type Match = {
-  week: number;
-  score: number;
-  enemy: string;
-  enemyScore: number;
-}
+// export type Match = {
+//   week: number;
+//   score: number;
+//   enemy: string;
+//   enemyScore: number;
+// }
 
 export type Player = {
   id: number;
   name: string;
-  round: number; // TODO: does td7 have rounds?
   teamId: number;
 }
 
@@ -52,10 +49,9 @@ export type WeaponStats = {
 
 export type TeamInfo = {
   teamName: string;
-  captain: string;
   wins: number;
   losses: number;
-  matches: Match[];
+  // matches: Match[];
   games: Game[];
   players: Player[];
   mapStats: MapStats[];
@@ -63,7 +59,7 @@ export type TeamInfo = {
 
 export type PlayerGame = {
   id: number;
-  week: number;
+  date: number;
   map: string;
   teamScore: number;
   enemyTeamScore: number;
@@ -73,19 +69,12 @@ export type PlayerGame = {
   damageTaken: number;
   kills: number;
   deaths: number;
-  // mostKills?: boolean;
-  // mostDeaths?: boolean;
-  // mostDamageDone?: boolean;
-  // leastDamageDone?: boolean;
-  // mostDamageTaken?: boolean;
-  // leastDamageTaken?: boolean;
 }
 
 export type PlayerInfo = {
   id: number;
   name: string;
   aliases: string[];
-  round: number;
   teamId: number;
   teamName: string;
   totalWeaponStats: WeaponStats[];
@@ -93,4 +82,16 @@ export type PlayerInfo = {
   averageDamageTaken: number;
   netDamage: number;
   games: PlayerGame[];
+}
+
+export type PlayerSummary = {
+  wins: number;
+  losses: number;
+  // frags: number;
+  // deaths: number;
+  hits: number;
+  shots: number;
+  damageDealt: number;
+  damageTaken: number;
+  // recentMatches: 
 }
