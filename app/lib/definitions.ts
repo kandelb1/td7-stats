@@ -94,4 +94,5 @@ export type PlayerSummary = {
   damageDealt: number;
   damageTaken: number;
   recentMatches: {date: number, gameId: number; map: string; playerRank: number; teamScore: number; enemyTeamScore: number}[];
+  recentCompetitors: {playerId: number; name: string;}[];
 }

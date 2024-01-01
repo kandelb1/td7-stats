@@ -73,12 +73,6 @@
       display: flex;
       flex-flow: row wrap;      
       gap: 10px;
-
-      .competitor {
-        display: flex;
-        flex-flow: row nowrap;
-        align-items: center;
-      }
     }
   }
 }

@@ -17,9 +17,6 @@ function matchPathname(pathname: string, match: string): string {
 
 export default function PlayerNavbar(props: IProps) {
   const pathname = usePathname();
-  console.log(pathname);
-  console.log(props);
-  // const { playerId } = useContext();
 
   return (
     <div className={styles.navBar}>

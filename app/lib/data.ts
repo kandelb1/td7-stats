@@ -224,12 +224,25 @@ export async function getPlayerSummary(playerId: string, teamId: string): Promis
                                     ORDER BY games.date DESC\
                                     LIMIT 4", playerId, teamId);
 
+  let recentCompetitors = await db.all("SELECT players.id AS playerId, players.name FROM players\
+                                        INNER JOIN pgStats ON pgStats.playerId = players.id\
+                                        INNER JOIN games ON pgStats.gameId = games.id\
+                                        WHERE pgStats.gameId IN (\
+                                          SELECT games.id FROM games\
+                                          INNER JOIN pgStats ON pgStats.gameId = games.id\
+                                          WHERE pgStats.playerId = ?\
+                                        ) AND players.teamId != ?\
+                                        GROUP BY players.id\
+                                        ORDER BY games.date DESC, name\
+                                        LIMIT 12", playerId, teamId);
+
   let answer: PlayerSummary = {
     ...pgStats,
     ...pwStats,
     ...wins,
     ...losses,
     recentMatches: recentMatches,
+    recentCompetitors: recentCompetitors,
   };
   // console.log('answer:');
   // console.log(answer);

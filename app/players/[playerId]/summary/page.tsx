@@ -3,6 +3,7 @@ import styles from './page.module.scss'
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import PlayerRecentMatch from '@/app/components/PlayerRecentMatch/PlayerRecentMatch';
+import PlayerRecentCompetitor from '@/app/components/PlayerRecentCompetitor/PlayerRecentCompetitor';
 
 
 function Reward(props: {
@@ -17,17 +18,6 @@ function Reward(props: {
         <h2>{props.name}</h2>
         <p>{props.desc}</p>
       </div>
-    </div>
-  );
-}
-
-function Competitor(props: {
-  name: string;
-}){
-  return (
-    <div className={styles.competitor}>
-      <Image src={'/bones_icon.png'} width={64} height={64} alt={'bones icon'} />
-      <p>{props.name}</p>
     </div>
   );
 }
@@ -81,14 +71,11 @@ export default async function PlayerSummary(props: IProps) {
         <div className={styles.recentCompetitors}>
           <h1>Recent Competitors</h1>
           <div className={styles.competitorsContainer}>
-            <Competitor name='Player1'/>
-            <Competitor name='Player2'/>
-            <Competitor name='Player3'/>
-            <Competitor name='Player4'/>
-            <Competitor name='Player5'/>
-            <Competitor name='Player6'/>
-            <Competitor name='Player7'/>
-            <Competitor name='Player8'/>
+            {playerSummary.recentCompetitors.map(c => {
+              return (
+                <PlayerRecentCompetitor playerId={c.playerId} playerName={c.name} key={c.playerId}/>
+              );
+            })}
           </div>
         </div>
     </div>
