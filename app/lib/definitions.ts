@@ -87,11 +87,11 @@ export type PlayerInfo = {
 export type PlayerSummary = {
   wins: number;
   losses: number;
-  // frags: number;
-  // deaths: number;
+  frags: number;
+  deaths: number;
   hits: number;
   shots: number;
   damageDealt: number;
   damageTaken: number;
-  // recentMatches: 
+  recentMatches: {date: number, gameId: number; map: string; playerRank: number; teamScore: number; enemyTeamScore: number}[];
 }

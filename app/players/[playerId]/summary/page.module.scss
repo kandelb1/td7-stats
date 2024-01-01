@@ -60,30 +60,6 @@
       display: flex;
       flex-flow: row nowrap;
       gap: 10px;
-
-      .match {
-        width: 192px;
-        height: 108px;
-        background-image: url('/levelshots/campgrounds.jpg');
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: 320px 180px;
-        display: flex;
-        flex-flow: column nowrap;
-        justify-content: flex-end;
-        text-align: center;
-
-        p {
-          background-color: rgba(255, 255, 255, 0.5);
-          width: 100%;
-          // color: white;
-        }
-
-        img {
-          position: relative;
-          top: 32px;
-        }
-      }
     }
   }
 

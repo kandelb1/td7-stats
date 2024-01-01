@@ -3,7 +3,6 @@ import styles from './page.module.scss';
 import { notFound, redirect } from 'next/navigation';
 import { getPlayerInfo } from '@/app/lib/data';
 
-
 export default async function PlayerPageLayout({
   children,
   params,

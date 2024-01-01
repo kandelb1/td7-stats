@@ -1,8 +1,5 @@
-import { getPlayerInfo } from '@/app/lib/data';
 import styles from './page.module.scss'
-import { notFound, redirect } from 'next/navigation';
-import PlayerWeaponChart from '@/app/components/PlayerWeaponChart/PlayerWeaponChart';
-import Image from "next/image";
+import { redirect } from 'next/navigation';
 
 interface IProps{
   params: {

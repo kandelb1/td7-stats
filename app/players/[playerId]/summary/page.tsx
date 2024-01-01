@@ -1,7 +1,8 @@
-import { getPlayerSummary } from '@/app/lib/data';
+import { getPlayerSummary, getPlayerTeamId } from '@/app/lib/data';
 import styles from './page.module.scss'
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import PlayerRecentMatch from '@/app/components/PlayerRecentMatch/PlayerRecentMatch';
 
 
 function Reward(props: {
@@ -16,19 +17,6 @@ function Reward(props: {
         <h2>{props.name}</h2>
         <p>{props.desc}</p>
       </div>
-    </div>
-  );
-}
-
-function Match(props: {
-  winStatus: string;
-  rank: string
-}){
-  return (
-    <div className={styles.match}>
-      <Image src={'/ca.png'} width={32} height={32} alt='ca logo'/>
-      <p>Finish: {props.rank}</p>
-      <p>{props.winStatus}</p>
     </div>
   );
 }
@@ -51,10 +39,13 @@ interface IProps {
 }
 
 export default async function PlayerSummary(props: IProps) {
-  console.log(`PlayerSummary gets params: ${props.params.playerId}`)
   // since this is a server component, we can do our data fetching here
 
-  const playerSummary = await getPlayerSummary(props.params.playerId);
+  // I can't find a way to pass in teamId as props with the current setup, so we need to do this:
+  const teamId = await getPlayerTeamId(props.params.playerId);
+  if(!teamId) notFound();
+
+  const playerSummary = await getPlayerSummary(props.params.playerId, teamId);
   if(!playerSummary) notFound();
   console.log(playerSummary);
 
@@ -66,6 +57,8 @@ export default async function PlayerSummary(props: IProps) {
           <p><b>Wins / Losses: </b>{playerSummary.wins} / {playerSummary.losses}</p>
           <p><b>Hits / Shots: </b>{playerSummary.hits} / {playerSummary.shots}</p>
           <p><b>Accuracy: </b>{(playerSummary.hits / playerSummary.shots * 100).toFixed(2)}%</p>
+          <p><b>Frags / Deaths: </b>{playerSummary.frags} / {playerSummary.deaths}</p>
+          <p><b>Damage Dealt / Taken: </b>{playerSummary.damageDealt} / {playerSummary.damageTaken}</p>
         </div>
         <div className={styles.recentAwards}>
           <h1>Recent Awards</h1>
@@ -77,9 +70,12 @@ export default async function PlayerSummary(props: IProps) {
       <div className={styles.recentMatches}>
         <h1>Recent Matches</h1>
         <div className={styles.matchesContainer}>
-          <Match rank='1st of 8' winStatus='Win'/>
-          <Match rank='3rd of 8' winStatus='Win'/>
-          <Match rank='8th of 8' winStatus='Loss'/>
+          {playerSummary.recentMatches.map(m => {
+            return (
+              <PlayerRecentMatch gameId={m.gameId} playerRank={m.playerRank} map={m.map}
+                teamScore={m.teamScore} enemyScore={m.enemyTeamScore} key={m.gameId}/>
+            );
+          })}
         </div>
       </div>
         <div className={styles.recentCompetitors}>
