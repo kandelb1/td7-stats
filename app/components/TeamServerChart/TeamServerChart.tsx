@@ -25,14 +25,14 @@ interface IProps{
   teamInfo: TeamInfo; 
 }
 
-export default function TeamMapChart(props: IProps) {
+export default function TeamServerChart(props: IProps) {
   const teamInfo = props.teamInfo;
 
   const options = {
     plugins: {
       title: {
         display: true,
-        text: 'Map Wins and Losses',
+        text: 'Server Wins and Losses',
       },
     },
     scales: {
@@ -47,19 +47,19 @@ export default function TeamMapChart(props: IProps) {
   };
 
   const data = {
-    labels: teamInfo.mapStats.map(x => x.name),
+    labels: teamInfo.serverStats.map(x => x.name),
     datasets: [
       {
         label: 'Wins',
-        data: teamInfo.mapStats.map(x => x.wins),
+        data: teamInfo.serverStats.map(x => x.wins),
         backgroundColor: 'rgb(0, 255, 0)',
       },
       {
         label: 'Losses',
-        data: teamInfo.mapStats.map(x => x.losses),
+        data: teamInfo.serverStats.map(x => x.losses),
         backgroundColor: 'rgb(255, 0, 0)',
       }
-    ],
+    ]
   };
 
   return (

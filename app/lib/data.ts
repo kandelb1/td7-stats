@@ -82,16 +82,33 @@ export async function getTeamInfo(teamId: string): Promise<TeamInfo | null> {
                                         GROUP BY name", playerId);
   }
 
-  let mapStats = await db.all("SELECT x.id, x.name, (\
-                              SELECT count(1) FROM tgStats\
-                              INNER JOIN games ON tgStats.gameId == games.id AND games.mapId == x.id\
-                              WHERE score > enemyScore AND teamId == ?\
-                            ) AS wins, (\
-                              SELECT count(1) FROM tgStats\
-                              INNER JOIN games ON tgStats.gameId == games.id AND games.mapId == x.id\
-                              WHERE score < enemyScore AND teamId == ?\
-                            ) AS losses\
-                            FROM (SELECT * FROM maps) x", teamId, teamId);
+  let mapStats = await db.all("SELECT maps.id, maps.name,\
+                              count(CASE WHEN score > enemyScore AND teamId = ? THEN 1 END) AS wins,\
+                              count(CASE WHEN score < enemyScore AND teamId = ? THEN 1 END) AS losses\
+                              FROM maps\
+                              INNER JOIN games ON games.mapId = maps.id\
+                              INNER JOIN tgStats ON tgStats.gameId = games.id\
+                              GROUP BY maps.id\
+                              HAVING wins + losses > 0", teamId, teamId);
+
+  let rosterStats = await db.all("SELECT players.id, players.name, count(pgStats.playerId) AS gamesPlayed,\
+                                SUM(CASE WHEN tgStats.score > tgStats.enemyScore THEN 1 ELSE 0 END) AS wins,\
+                                SUM(CASE WHEN tgStats.enemyScore > tgStats.score THEN 1 ELSE 0 END) as losses\
+                                FROM players\
+                                LEFT JOIN pgStats ON pgStats.playerId = players.id\
+                                LEFT JOIN tgStats ON tgStats.gameId = pgStats.gameId AND tgStats.teamId = players.teamId\
+                                WHERE players.teamId = ?\
+                                GROUP BY players.id\
+                                ORDER BY gamesPlayed DESC, name", teamId);
+
+  let serverStats = await db.all("SELECT servers.id, servers.name,\
+                                count(CASE WHEN score > enemyScore AND teamId = ? THEN 1 END) AS wins,\
+                                count(CASE WHEN score < enemyScore AND teamId = ? THEN 1 END) AS losses\
+                                FROM servers\
+                                INNER JOIN games ON games.serverId = servers.id\
+                                INNER JOIN tgStats ON tgStats.gameId = games.id\
+                                GROUP BY servers.id\
+                                HAVING wins + losses > 0", teamId, teamId);
 
   let answer: TeamInfo = {
     teamName: teamInfo['name'],
@@ -100,6 +117,8 @@ export async function getTeamInfo(teamId: string): Promise<TeamInfo | null> {
     games: games,
     players: players,
     mapStats: mapStats,
+    rosterStats: rosterStats,
+    serverStats: serverStats,
   }
 
   return answer;
@@ -198,22 +217,19 @@ export async function getPlayerSummary(playerId: string, teamId: string): Promis
     return null;
   }
   
-  let pgStats = await db.get("SELECT sum(damageDealt) AS damageDealt, sum(damageTaken) AS damageTaken,\
-                            sum(kills) AS frags, sum(deaths) AS deaths FROM pgStats\
+  let pgStats = await db.get("SELECT coalesce(sum(damageDealt), 0) AS damageDealt, coalesce(sum(damageTaken), 0) AS damageTaken,\
+                            coalesce(sum(kills), 0) AS frags, coalesce(sum(deaths), 0) AS deaths FROM pgStats\
                             WHERE pgStats.playerId = ?", playerId);
 
-  let pwStats = await db.get("SELECT sum(shotsFired) AS shots, sum(shotsHit) AS hits FROM pwStats\
+  let pwStats = await db.get("SELECT coalesce(sum(shotsFired), 0) AS shots, coalesce(sum(shotsHit), 0) AS hits FROM pwStats\
                             WHERE playerId = ?", playerId);
-  
-  let wins = await db.get("SELECT count(1) AS wins FROM tgStats\
-                          WHERE gameId IN (\
-                            SELECT gameId FROM pgStats WHERE playerId = ?\
-                          ) AND teamId = ? AND score > enemyScore", playerId, teamId);
 
-  let losses = await db.get("SELECT count(1) AS losses FROM tgStats\
-                            WHERE gameId IN (\
-                              SELECT gameId FROM pgStats WHERE playerId = ?\
-                           ) AND teamId = ? AND score < enemyScore", playerId, teamId);
+  let winsAndLosses = await db.get("SELECT coalesce(sum(CASE WHEN tgStats.score > tgStats.enemyScore THEN 1 ELSE 0 END), 0) AS wins,\
+                                  coalesce(sum(CASE WHEN tgStats.score < tgStats.enemyScore THEN 1 ELSE 0 END), 0) AS losses\
+                                  FROM tgStats\
+                                  WHERE tgStats.gameId IN (\
+                                    SELECT gameId FROM pgStats WHERE pgstats.playerId = ?\
+                                  ) AND tgStats.teamId = ?", playerId, teamId);
 
   let recentMatches = await db.all("SELECT games.date, pgStats.gameId, maps.name AS map, pgStats.rank AS playerRank,\
                                     tgStats.score AS teamScore, tgStats.enemyScore AS enemyTeamScore FROM games\
@@ -239,8 +255,7 @@ export async function getPlayerSummary(playerId: string, teamId: string): Promis
   let answer: PlayerSummary = {
     ...pgStats,
     ...pwStats,
-    ...wins,
-    ...losses,
+    ...winsAndLosses,
     recentMatches: recentMatches,
     recentCompetitors: recentCompetitors,
   };

@@ -55,6 +55,8 @@ export type TeamInfo = {
   games: Game[];
   players: Player[];
   mapStats: MapStats[];
+  rosterStats: {id: number; name: string; gamesPlayed: number; wins: number; losses: number;}[]
+  serverStats: {id: number, name: string, wins: number, losses: number;}[];
 }
 
 export type PlayerGame = {
