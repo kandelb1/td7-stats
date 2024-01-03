@@ -1,6 +1,6 @@
 import PlayerNavbar from '@/app/components/PlayerNavbar/PlayerNavbar';
 import styles from './page.module.scss';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { getPlayerInfo } from '@/app/lib/data';
 
 export default async function PlayerPageLayout({
@@ -19,7 +19,7 @@ export default async function PlayerPageLayout({
   return (
     <div className={styles.layoutContainer}>
       <h1>{playerInfo.name} (plays for {playerInfo.teamName})</h1>
-      <PlayerNavbar playerId={playerInfo.id}/>
+      <PlayerNavbar playerId={params.playerId}/>
       {/* 
       import PlayerContextProvider from './blahblah';
       <PlayerContextProvider>
