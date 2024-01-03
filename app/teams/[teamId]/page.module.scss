@@ -1,44 +1,15 @@
-.container {
+.layoutContainer {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  border: 1px solid green;
   width: 80%;
 
   h1 {
-    font-size: 200%;
-    font-family: "Handel Gothic"
+    font-size: 150%;
+    font-family: 'Handel Gothic';
   }
   
-  .rosterTable {
-    width: 80%;
-    background-color: rgba(240, 255, 255, 0.8);
-
-    caption {
-      text-align: left;
-      font-family: "Handel Gothic";
-      font-size: 125%;
-    }
-
-    table, th, td {      
-      border: 1px solid black;
-      text-align: left;
-    }
-
-    th, td {
-      padding: 0.25em;
-    }
-
-    tr:nth-child(odd) {
-      background-color: rgba(140, 155, 155, 0.8);
-    }
-
-    th {
-      background-color: greenyellow;
-    }
-
-    tr:hover {
-      background-color: orange;
-    }
+  b {
+    font-weight: bold;
   }
 }
