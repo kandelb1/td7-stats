@@ -1,7 +1,7 @@
 import styles from './page.module.scss';
 import TeamMapChart from '@/app/components/TeamMapChart/TeamMapChart';
 import TeamServerChart from '@/app/components/TeamServerChart/TeamServerChart';
-import { getTeamStatistics } from '@/app/lib/data';
+import { getTeamStatistics, getAllTeamIds } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 
 interface IProps {
@@ -21,4 +21,13 @@ export default async function TeamStatistics(props: IProps) {
       <TeamServerChart serverStats={teamStatistics.serverStats}/>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const teamIds = await getAllTeamIds();
+  return teamIds.map(x => {
+    return {
+      teamId: x.id.toString(),
+    }
+  });
 }
