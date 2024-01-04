@@ -37,7 +37,6 @@ export default async function PlayerSummary(props: IProps) {
 
   const playerSummary = await getPlayerSummary(props.params.playerId, teamId);
   if(!playerSummary) notFound();
-  console.log(playerSummary);
 
   return (
     <div className={styles.summaryContainer}>

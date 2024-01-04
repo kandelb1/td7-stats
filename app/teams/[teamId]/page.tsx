@@ -13,7 +13,6 @@ export default async function Team(props: IProps){
 
 export async function generateStaticParams() {
   const teamIds = await getAllTeamIds();
-  console.log('generateStaticParams for /teams/[teamId]/page.tsx');
   return teamIds.map(x => {
     return {
       teamId: x.id.toString(),

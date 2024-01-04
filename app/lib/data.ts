@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { Database, open } from 'sqlite'
-import { Player, Team, TeamInfo, PlayerInfo, PlayerSummary } from './definitions';
+import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics } from './definitions';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>;
 
@@ -27,7 +27,7 @@ export async function getTeamsList(): Promise<Team[]> {
   return teamsList;
 }
 
-export async function getTeamInfo(teamId: string): Promise<TeamInfo | null> {
+export async function getTeamName(teamId: string): Promise<string | null> {
   if(!db) {
     console.log('connecting to database');
     db = await open({
@@ -46,40 +46,83 @@ export async function getTeamInfo(teamId: string): Promise<TeamInfo | null> {
     return null;
   }
 
-  let teamInfo = await db.get("SELECT name, (\
-                              SELECT count(1) FROM tgStats\
-                              WHERE teamId == ? AND tgStats.score > tgStats.enemyScore\
-                            ) AS wins, (\
-                              SELECT count(1) FROM tgStats\
-                              WHERE teamId == ? AND tgStats.score < tgStats.enemyScore\
-                            ) AS losses FROM teams WHERE id == ?", teamId, teamId, teamId);
+  let answer = await db.get("SELECT name FROM teams WHERE id = ?", teamId);
+  return answer['name'];
+}
 
-  // let matches = await db.all("SELECT week, score, teams.name AS enemy, enemy_score AS enemyScore FROM matches\
-  //                         INNER JOIN teams ON matches.enemy_teamId == teams.id\
-  //                         WHERE matches.teamId == ?", id);
+export async function getTeamSummary(teamId: string): Promise<TeamSummary | null> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
 
-  let games = await db.all("SELECT games.id, maps.name AS map, tgStats.score, tgStats.enemyScore FROM games\
-                        INNER JOIN maps ON games.mapId == maps.id\
-                        INNER JOIN tgStats ON tgStats.gameId == games.id\
-                        WHERE tgStats.teamId == ?", teamId);
+  // check if this teamId exists before doing anything
+  let validTeamId = await db.get("SELECT EXISTS(\
+                                    SELECT 1 FROM teams\
+                                    WHERE id == ?\
+                                  ) AS valid", teamId);
+  if(validTeamId['valid'] == 0) { // stop now
+    console.error(`Ignoring invalid teamId: ${teamId}`);
+    return null;
+  }
 
+  let winsAndLosses = await db.get("SELECT count(CASE WHEN tgStats.score > tgStats.enemyScore THEN 1 END) AS wins,\
+                                  count(CASE WHEN tgStats.score < tgStats.enemyScore THEN 1 END) AS losses\
+                                  FROM tgStats\
+                                  WHERE teamId = ?", teamId);
 
-  let players = await db.all("SELECT x.id, (\
-                              SELECT name FROM playerNames\
-                              WHERE playerNames.playerId == x.id\
-                              GROUP BY name\
-                              ORDER BY count(1) DESC\
-                              LIMIT 1\
-                            ) AS name\
-                            FROM (SELECT id FROM players WHERE players.teamId == ?) x\
-                            INNER JOIN players ON players.id == x.id", teamId);
+  let mostPlayedMaps = await db.all("SELECT maps.name, count(1) AS totalGames,\
+                                    round(count(CASE WHEN tgStats.score > tgStats.enemyScore THEN 1 END) * 1.0 / count(1) * 100, 2) AS winPercentage\
+                                    FROM tgStats\
+                                    INNER JOIN games ON games.id = tgStats.gameId\
+                                    INNER JOIN maps ON maps.id = games.mapId\
+                                    WHERE (tgStats.score > tgStats.enemyScore OR tgStats.score < tgStats.enemyScore) AND tgStats.teamId = ?\
+                                    GROUP BY maps.name\
+                                    ORDER BY totalGames DESC, name\
+                                    LIMIT 3", teamId);
+
+  let roster = await db.all("SELECT players.id, players.name, count(pgStats.playerId) AS gamesPlayed,\
+                            SUM(CASE WHEN tgStats.score > tgStats.enemyScore THEN 1 ELSE 0 END) AS wins,\
+                            SUM(CASE WHEN tgStats.enemyScore > tgStats.score THEN 1 ELSE 0 END) as losses\
+                            FROM players\
+                            LEFT JOIN pgStats ON pgStats.playerId = players.id\
+                            LEFT JOIN tgStats ON tgStats.gameId = pgStats.gameId AND tgStats.teamId = players.teamId\
+                            WHERE players.teamId = ?\
+                            GROUP BY players.id\
+                            ORDER BY gamesPlayed DESC, name", teamId);
   
-  // TODO: is it possible to integrate this into the sql statement above?
-  for(let i = 0; i < players.length; i++) { // TODO: Player type doesn't have an 'aliases' property anymore
-    let playerId = players[i]['id'];
-    players[i]['aliases'] = await db.all("SELECT name FROM playerNames\
-                                        WHERE playerNames.playerId == ?\
-                                        GROUP BY name", playerId);
+  // TODO: waiting to hear official rules on matchups                      
+  // let recentMatchups = await db.all("");
+
+  let answer: TeamSummary = {
+    wins: winsAndLosses['wins'],
+    losses: winsAndLosses['losses'],
+    mostPlayedMaps: mostPlayedMaps,
+    roster: roster,
+  };
+  return answer;
+}
+
+export async function getTeamStatistics(teamId: string): Promise<TeamStatistics | null> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+
+  // check if this teamId exists before doing anything
+  let validTeamId = await db.get("SELECT EXISTS(\
+                                    SELECT 1 FROM teams\
+                                    WHERE id == ?\
+                                  ) AS valid", teamId);
+  if(validTeamId['valid'] == 0) { // stop now
+    console.error(`Ignoring invalid teamId: ${teamId}`);
+    return null;
   }
 
   let mapStats = await db.all("SELECT maps.id, maps.name,\
@@ -91,16 +134,6 @@ export async function getTeamInfo(teamId: string): Promise<TeamInfo | null> {
                               GROUP BY maps.id\
                               HAVING wins + losses > 0", teamId, teamId);
 
-  let rosterStats = await db.all("SELECT players.id, players.name, count(pgStats.playerId) AS gamesPlayed,\
-                                SUM(CASE WHEN tgStats.score > tgStats.enemyScore THEN 1 ELSE 0 END) AS wins,\
-                                SUM(CASE WHEN tgStats.enemyScore > tgStats.score THEN 1 ELSE 0 END) as losses\
-                                FROM players\
-                                LEFT JOIN pgStats ON pgStats.playerId = players.id\
-                                LEFT JOIN tgStats ON tgStats.gameId = pgStats.gameId AND tgStats.teamId = players.teamId\
-                                WHERE players.teamId = ?\
-                                GROUP BY players.id\
-                                ORDER BY gamesPlayed DESC, name", teamId);
-
   let serverStats = await db.all("SELECT servers.id, servers.name,\
                                 count(CASE WHEN score > enemyScore AND teamId = ? THEN 1 END) AS wins,\
                                 count(CASE WHEN score < enemyScore AND teamId = ? THEN 1 END) AS losses\
@@ -110,17 +143,10 @@ export async function getTeamInfo(teamId: string): Promise<TeamInfo | null> {
                                 GROUP BY servers.id\
                                 HAVING wins + losses > 0", teamId, teamId);
 
-  let answer: TeamInfo = {
-    teamName: teamInfo['name'],
-    wins: teamInfo['wins'],
-    losses: teamInfo['losses'],
-    games: games,
-    players: players,
+  let answer: TeamStatistics = {
     mapStats: mapStats,
-    rosterStats: rosterStats,
     serverStats: serverStats,
-  }
-
+  };
   return answer;
 }
 

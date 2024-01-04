@@ -1,6 +1,6 @@
 'use client'
 import styles from './page.module.scss'
-import { TeamInfo } from "@/app/lib/definitions";
+import { MapStats } from "@/app/lib/definitions";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,12 +22,10 @@ ChartJS.register(
 );
 
 interface IProps{
-  teamInfo: TeamInfo; 
+  mapStats: MapStats[];
 }
 
 export default function TeamMapChart(props: IProps) {
-  const teamInfo = props.teamInfo;
-
   const options = {
     plugins: {
       title: {
@@ -47,16 +45,16 @@ export default function TeamMapChart(props: IProps) {
   };
 
   const data = {
-    labels: teamInfo.mapStats.map(x => x.name),
+    labels: props.mapStats.map(x => x.name),
     datasets: [
       {
         label: 'Wins',
-        data: teamInfo.mapStats.map(x => x.wins),
+        data: props.mapStats.map(x => x.wins),
         backgroundColor: 'rgb(0, 255, 0)',
       },
       {
         label: 'Losses',
-        data: teamInfo.mapStats.map(x => x.losses),
+        data: props.mapStats.map(x => x.losses),
         backgroundColor: 'rgb(255, 0, 0)',
       }
     ],

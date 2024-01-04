@@ -14,8 +14,6 @@ export default async function Player(props: IProps) {
 
 export async function generateStaticParams() {
   const playerIds = await getAllPlayerIds();
-  console.log('I did getAllPlayerIds, here is what I got: ');
-  console.log(playerIds);
   return playerIds.map(x => {
     return {
       playerId: x.id.toString(),

@@ -1,7 +1,7 @@
 import TeamNavbar from '@/app/components/TeamNavbar/TeamNavbar';
 import styles from './page.module.scss';
 import { notFound } from 'next/navigation';
-import { getTeamInfo } from '@/app/lib/data';
+import { getTeamName } from '@/app/lib/data';
 
 export default async function TeamPageLayout({
   children,
@@ -12,13 +12,12 @@ export default async function TeamPageLayout({
     teamId: string;
   }
 }) {
-
-  const teamInfo = await getTeamInfo(params.teamId);
-  if(!teamInfo) { notFound(); }
+  const teamName = await getTeamName(params.teamId);
+  if(!teamName) { notFound(); }
 
   return (
     <div className={styles.layoutContainer}>
-      <h1>{teamInfo.teamName}</h1>
+      <h1>{teamName}</h1>
       <TeamNavbar teamId={params.teamId}/>
       {children}
     </div>

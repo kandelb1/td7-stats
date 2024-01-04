@@ -9,13 +9,6 @@ export type Map = {
   name: string;
 };
 
-export type Game = {
-  id: number;
-  map: string;
-  score: number;
-  enemyScore: number;
-}
-
 // TODO: unsure how td7 matchups and scoring works yet
 // export type Match = {
 //   week: number;
@@ -47,16 +40,24 @@ export type WeaponStats = {
   accuracy: number;
 }
 
-export type TeamInfo = {
-  teamName: string;
+export type ServerStats = {
+  id: number;
+  name: string;
   wins: number;
   losses: number;
-  // matches: Match[];
-  games: Game[];
-  players: Player[];
+}
+
+export type TeamSummary = {
+  wins: number;
+  losses: number;
+  mostPlayedMaps: {name: string; totalGames: number; winPercentage: number}[];
+  roster: {id: number; name: string; gamesPlayed: number; wins: number; losses: number;}[];
+  // recentMatches: Match[]; TODO: waiting to hear how matches work
+}
+
+export type TeamStatistics = {
   mapStats: MapStats[];
-  rosterStats: {id: number; name: string; gamesPlayed: number; wins: number; losses: number;}[]
-  serverStats: {id: number, name: string, wins: number, losses: number;}[];
+  serverStats: ServerStats[];
 }
 
 export type PlayerGame = {
