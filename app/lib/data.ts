@@ -288,3 +288,28 @@ export async function getPlayerTeamId(playerId: string): Promise<string | null> 
 
   return teamId['teamId'];
 }
+
+export async function getAllPlayerIds() {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+  let answer = await db.all("SELECT id FROM players");
+  
+  return answer;
+}
+
+export async function getAllTeamIds() {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+  let answer = await db.all("SELECT id FROM teams");
+  return answer;
+}

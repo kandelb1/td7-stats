@@ -1,4 +1,4 @@
-import { getTeamInfo } from '@/app/lib/data';
+import { getTeamInfo, getAllTeamIds } from '@/app/lib/data';
 import styles from './page.module.scss'
 import TeamMapChart from '@/app/components/TeamMapChart/TeamMapChart';
 import { notFound } from 'next/navigation';
@@ -44,4 +44,13 @@ export default async function TeamSummary(props: IProps) {
       <TeamServerChart teamInfo={teamInfo}/>
     </div>
   )
+}
+
+export async function generateStaticParams() {
+  const teamIds = await getAllTeamIds();
+  return teamIds.map(x => {
+    return {
+      teamId: x.id.toString(),
+    }
+  });
 }

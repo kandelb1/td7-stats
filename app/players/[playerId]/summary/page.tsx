@@ -1,4 +1,4 @@
-import { getPlayerSummary, getPlayerTeamId } from '@/app/lib/data';
+import { getAllPlayerIds, getPlayerSummary, getPlayerTeamId } from '@/app/lib/data';
 import styles from './page.module.scss'
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -80,4 +80,13 @@ export default async function PlayerSummary(props: IProps) {
         </div>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const playerIds = await getAllPlayerIds();
+  return playerIds.map(x => {
+    return {
+      playerId: x.id.toString(),
+    }
+  });
 }
