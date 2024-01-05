@@ -97,6 +97,7 @@ export type PlayerSummary = {
   shots: number;
   damageDealt: number;
   damageTaken: number;
+  recentAwards: {name: string; description: string; gameId: number; date: number}[];
   recentMatches: {date: number, gameId: number; map: string; playerRank: number; teamScore: number; enemyTeamScore: number}[];
   recentCompetitors: {playerId: number; name: string;}[];
 }

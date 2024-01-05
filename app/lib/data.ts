@@ -264,6 +264,13 @@ export async function getPlayerSummary(playerId: string, teamId: string): Promis
                                     SELECT gameId FROM pgStats WHERE pgstats.playerId = ?\
                                   ) AND tgStats.teamId = ?", playerId, teamId);
 
+  let recentAwards = await db.all("SELECT awards.name, awards.description, gameId, games.date FROM awardStats\
+                                  INNER JOIN awards ON awards.id = awardStats.awardId\
+                                  INNER JOIN games ON games.id = awardStats.gameId\
+                                  WHERE playerId = ?\
+                                  ORDER BY date DESC\
+                                  LIMIT 3", playerId);
+
   let recentMatches = await db.all("SELECT games.date, pgStats.gameId, maps.name AS map, pgStats.rank AS playerRank,\
                                     tgStats.score AS teamScore, tgStats.enemyScore AS enemyTeamScore FROM games\
                                     INNER JOIN pgStats ON pgStats.gameId = games.id\
@@ -289,6 +296,7 @@ export async function getPlayerSummary(playerId: string, teamId: string): Promis
     ...pgStats,
     ...pwStats,
     ...winsAndLosses,
+    recentAwards: recentAwards,
     recentMatches: recentMatches,
     recentCompetitors: recentCompetitors,
   };

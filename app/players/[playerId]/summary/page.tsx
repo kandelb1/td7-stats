@@ -4,23 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import PlayerRecentMatch from '@/app/components/PlayerRecentMatch/PlayerRecentMatch';
 import PlayerRecentCompetitor from '@/app/components/PlayerRecentCompetitor/PlayerRecentCompetitor';
-
-
-function Reward(props: {
-  name: string;
-  desc: string;
-  // image: string
-}){
-  return (
-    <div className={styles.awardBox}>
-      <Image src='/medal_accuracy.png' width={64} height={64} alt='blah'/>
-      <div className={styles.textBox}>
-        <h2>{props.name}</h2>
-        <p>{props.desc}</p>
-      </div>
-    </div>
-  );
-}
+import PlayerRecentAward from '@/app/components/PlayerRecentAward/PlayerRecentAward';
 
 interface IProps {
   params: {
@@ -51,9 +35,14 @@ export default async function PlayerSummary(props: IProps) {
         </div>
         <div className={styles.recentAwards}>
           <h1>Recent Awards</h1>
-          <Reward name='LG Master' desc='Finish a match with over 50% LG accuracy.'/>
-          <Reward name='Legend' desc='Have at least one kill with PG.'/>
-          <Reward name='Ban This Guy' desc='Have at least one shot fired with MG.'/>
+          {playerSummary.recentAwards.length == 0
+            ? <p>No awards earned.</p>
+            : playerSummary.recentAwards.map((award, i)=> {
+              return (
+                <PlayerRecentAward name={award.name} description={award.description} gameId={award.gameId} date={award.date} key={i}/>
+              );
+            })
+          }
         </div>
       </div>
       <div className={styles.recentMatches}>
