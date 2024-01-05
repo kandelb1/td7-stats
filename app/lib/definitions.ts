@@ -58,6 +58,7 @@ export type TeamSummary = {
 export type TeamStatistics = {
   mapStats: MapStats[];
   serverStats: ServerStats[];
+  weaponStats: {weaponName: string; totalDamage: number;}[];
 }
 
 export type PlayerGame = {

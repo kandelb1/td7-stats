@@ -142,10 +142,17 @@ export async function getTeamStatistics(teamId: string): Promise<TeamStatistics 
                                 INNER JOIN tgStats ON tgStats.gameId = games.id\
                                 GROUP BY servers.id\
                                 HAVING wins + losses > 0", teamId, teamId);
+  
+  let weaponStats = await db.all("SELECT weaponName, sum(damage) AS totalDamage FROM pwStats\
+                                INNER JOIN players ON players.id = pwStats.playerId\
+                                WHERE players.teamId = ?\
+                                GROUP BY weaponName\
+                                HAVING totalDamage > 0 ORDER BY totalDamage DESC", teamId);
 
   let answer: TeamStatistics = {
     mapStats: mapStats,
     serverStats: serverStats,
+    weaponStats: weaponStats,
   };
   return answer;
 }

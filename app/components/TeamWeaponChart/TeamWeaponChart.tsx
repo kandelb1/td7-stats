@@ -1,5 +1,5 @@
 'use client'
-import { WeaponStats } from '@/app/lib/definitions';
+import { TeamStatistics } from "@/app/lib/definitions";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartData } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
 import styles from './page.module.scss';
@@ -7,14 +7,13 @@ import styles from './page.module.scss';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface IProps {
-  weaponData: WeaponStats[];
+  teamStats: TeamStatistics;
 }
 
-export default function WeaponChart(props: IProps) {
-
+export default function TeamWeaponChart(props: IProps) {
   function getChartColors(): string[] {
     let answer: string[] = [];
-    for(let weap of props.weaponData) {
+    for(let weap of props.teamStats.weaponStats) {
       switch(weap.weaponName) {
         case 'rl':
           answer.push('rgba(255, 0, 0, 0.8)');
@@ -49,18 +48,30 @@ export default function WeaponChart(props: IProps) {
   }
 
   const data = {
-    labels: props.weaponData.map(weap => weap.weaponName),
+    labels: props.teamStats.weaponStats.map(weap => weap.weaponName),
     datasets: [
       {
         label: "Damage",
-        data: props.weaponData.map(weap => weap.damage),
+        data: props.teamStats.weaponStats.map(weap => weap.totalDamage),
         backgroundColor: getChartColors(),
-      }
-    ],
+      },
+    ]
   };
 
+  // TODO: I want to hide every slice in the pie chart except rl, lg, and rg to start
+  // those are always the biggest slices and the other ones are so small you can barely see them
+  // so it makes sense to hide them on start
+  // the only problem is it takes WAY too much work to do this
+  // I tried some stuff from this stackoverflow post and maybe the solution lies here:
+  // https://stackoverflow.com/questions/70706873/show-hide-all-nested-data-in-chartjs-pie-chart-when-outer-is-shown-hidden
   const options = {
     maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Total Damage Dealt per Weapon',
+      },
+    },
   };
 
   return (

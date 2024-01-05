@@ -15,7 +15,7 @@ interface IProps {
 }
 
 export default function PlayerNavbar(props: IProps) {
-  const pathname = usePathname();
+  const pathname = usePathname(); // TODO: this is broken when I use the static export option to build the site
 
   return (
     <div className={styles.navBar}>
