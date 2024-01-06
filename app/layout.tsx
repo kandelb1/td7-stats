@@ -14,7 +14,7 @@ export default function RootLayout({
         <header className={styles.header}>
           <div className={styles.topBar}>
             <Link href={'/'}>
-              <Image src={'/ql_top_logo.png'} width={387} height={96} alt={'ql logo'} className={styles.logo}/>
+              <Image src={'/td_top_logo.png'} width={126} height={96} alt={'ql logo'} className={styles.logo}/>
             </Link>            
             <div className={styles.playerProfile}>
               <p>Welcome back, vajayyjayy.</p>
@@ -31,8 +31,8 @@ export default function RootLayout({
           {children}
         </div>
         <footer className={styles.footer}>
-          <Image src={'/td7_discord_icon.webp'} width={96} height={96} alt={'td7 icon'}/>
-          <Image src={'/esrb_t.png'} width={137} height={93} alt={'esrb rating'} />
+          <Link href="https://twitch.tv/mrgrim"><Image src={'/mrgrim.png'} width={82} height={80} alt={'mrgrim twitch'} /></Link>
+          <Link href="https://www.thunderdomequake.com"><Image src={'/backbutton3.png'} width={190} height={80} alt={'Return'} /></Link>
         </footer>
       </body>
     </html>
