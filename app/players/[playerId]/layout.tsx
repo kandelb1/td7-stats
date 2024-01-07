@@ -20,11 +20,6 @@ export default async function PlayerPageLayout({
     <div className={styles.layoutContainer}>
       <h1>{playerInfo.name} (plays for {playerInfo.teamName})</h1>
       <PlayerNavbar playerId={params.playerId}/>
-      {/* 
-      import PlayerContextProvider from './blahblah';
-      <PlayerContextProvider>
-        {children}
-      </PlayerContextProvider> */}
       {children}
     </div>
   );

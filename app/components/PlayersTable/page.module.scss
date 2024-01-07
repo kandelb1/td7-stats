@@ -1,0 +1,56 @@
+.playerList {
+  // height: 50em;
+  // overflow-y: scroll;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 1em;
+
+  .inputBox {
+    margin-top: 1em;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  table {
+    width: 60em;
+    text-align: left;
+
+    a {
+      text-decoration: none;
+      color: inherit; 
+    }
+
+    thead {
+      border: 1px solid rgb(65, 64, 64);
+      background-color: rgb(65, 64, 64);
+      color: white;
+      th {
+        font-size: 150%;
+        font-family: 'Handel Gothic';
+        padding: 0.5em;
+      } 
+    }
+
+    tbody {
+      td {
+        font-size: 110%;
+        padding: 0.5em;
+        vertical-align: middle;
+
+        img {
+          vertical-align: middle;
+        }
+      }
+
+      tr:nth-child(odd) {
+        background-color: rgba(113, 195, 233, 0.575);
+      }
+
+      tr:hover {
+        background-color: orange;
+      }
+    }
+  }
+}

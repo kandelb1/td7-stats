@@ -166,8 +166,20 @@ export async function getPlayerList(): Promise<Player[]> {
     });
   }
   
-  let result = await db.all<Player[]>("SELECT id, name, teamId FROM players\
-                                       ORDER BY teamId, name");
+  let result = await db.all<Player[]>("SELECT players.id, players.name, players.teamId, teams.name AS teamName,\
+                                      coalesce(sumpgStats.damageDealt, 0) AS damageDealt, coalesce(sumpgStats.kills, 0) AS kills,\
+                                      coalesce(CAST(sumpwStats.shotsHit AS float) / nullif(sumpwStats.shotsFired, 0) * 100, 0) AS accuracy\
+                                      FROM players\
+                                      INNER JOIN teams ON teams.id = players.teamId\
+                                      LEFT JOIN (\
+                                        SELECT playerId, sum(damageDealt) AS damageDealt, sum(kills) AS kills FROM pgStats\
+                                        GROUP BY playerId\
+                                      ) AS sumpgStats ON sumpgStats.playerId = players.id\
+                                      LEFT JOIN (\
+                                        SELECT playerId, sum(shotsHit) AS shotsHit, sum(shotsFired) AS shotsFired FROM pwStats\
+                                        GROUP BY playerId\
+                                      ) AS sumpwStats ON sumpwStats.playerId = players.id\
+                                      ORDER BY damageDealt DESC");
   return result;
 }
 
@@ -190,43 +202,14 @@ export async function getPlayerInfo(playerId: string): Promise<PlayerInfo | null
     return null;
   }
 
-  let basicInfo = await db.get("SELECT players.id, teams.name AS teamName, players.name, players.teamId FROM players\
-                                INNER JOIN teams ON players.teamId == teams.id\
-                                WHERE players.id == ?", playerId);
-
-  let aliases = await db.all("SELECT name FROM playerNames\
-                              WHERE playerId == ?\
-                              GROUP BY name\
-                              ORDER BY count(1) DESC", playerId);
-
-  let totalWeapStats = await db.all("SELECT weaponName, sum(damage) AS damage, sum(kills) AS kills,\
-                                    sum(shotsFired) AS shotsFired, sum(shotsHit) AS shotsHit,\
-                                    CAST(sum(shotsHit) AS float) / sum(shotsFired) * 100 AS accuracy FROM pwStats\
-                                    INNER JOIN players ON playerId == players.id\
-                                    WHERE playerId == ?\
-                                    GROUP BY weaponName", playerId);
-
-  let avgDamages = await db.get("SELECT round(avg(damageDealt), 2) AS averageDamageDealt, round(avg(damageTaken), 2) AS averageDamageTaken,\
-                          round(avg(damageDealt) - avg(damageTaken), 2) AS netDamage FROM pgStats\
-                          WHERE playerId == ?", playerId);
-
-  let games = await db.all("SELECT games.id, games.date, maps.name AS map, tgStats.score AS teamScore, tgStats.enemyScore AS enemyTeamScore,\
-                          pgStats.rank, pgStats.score AS playerScore, pgStats.damageDealt, pgStats.damageTaken,\
-                          pgStats.kills, pgStats.deaths FROM pgStats\
-                          INNER JOIN players ON players.id == ?\
-                          INNER JOIN games ON pgStats.gameId == games.id\
-                          INNER JOIN tgStats ON tgStats.gameId == games.id AND players.teamId == tgStats.teamId\
-                          INNER JOIN maps ON games.mapId == maps.id\
-                          WHERE pgStats.playerId == ?\
-                          ORDER BY date DESC", playerId, playerId);
+  let info = await db.get("SELECT players.name, teams.name AS teamName FROM players\
+                          INNER JOIN teams ON teams.id = players.teamId\
+                          WHERE players.id = ?", playerId);
 
   let answer: PlayerInfo = {
-    ...basicInfo,
-    aliases: aliases,
-    totalWeaponStats: totalWeapStats,
-    ...avgDamages,
-    games: games,
-  };
+    name: info['name'],
+    teamName: info['teamName']
+  }
   
   return answer;
 }

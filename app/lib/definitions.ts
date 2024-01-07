@@ -21,8 +21,11 @@ export type Player = {
   id: number;
   name: string;
   teamId: number;
+  teamName: string;
+  damageDealt: number;
+  kills: number;
+  accuracy: number;
 }
-
 
 export type MapStats = {
   id: number;
@@ -76,16 +79,8 @@ export type PlayerGame = {
 }
 
 export type PlayerInfo = {
-  id: number;
-  name: string;
-  aliases: string[];
-  teamId: number;
+  name: string;  
   teamName: string;
-  totalWeaponStats: WeaponStats[];
-  averageDamageDealt: number;
-  averageDamageTaken: number;
-  netDamage: number;
-  games: PlayerGame[];
 }
 
 export type PlayerSummary = {

@@ -1,16 +1,10 @@
 import { getPlayerList } from '@/app/lib/data';
 import styles from './page.module.scss'
-import PlayerCard from '../components/PlayerCard/PlayerCard';
+import PlayersTable from '../components/PlayersTable/PlayersTable';
 
 export default async function Players() {
   const players = await getPlayerList();
   return (
-    <div className={styles.playerList}>
-      {players.map(p => {
-        return (
-          <PlayerCard player={p} key={p.id}/>
-        );
-      })}
-    </div>
+    <PlayersTable players={players}/>
   );
 }
