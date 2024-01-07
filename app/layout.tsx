@@ -14,11 +14,11 @@ export default function RootLayout({
         <header className={styles.header}>
           <div className={styles.topBar}>
             <Link href={'/'}>
-              <Image src={'/td_top_logo.png'} width={126} height={96} alt={'ql logo'} className={styles.logo}/>
-            </Link>            
+			        <img src={'/td_top_logo.png'} width={126} height={96} alt={'ql logo'} className={styles.logo}/>
+            </Link>
             <div className={styles.playerProfile}>
               <p>Welcome back, vajayyjayy.</p>
-              <Image src={'/placeholder_playercard.png'} width={75} height={75} alt={'playercard'}/>              
+              <img src={'/placeholder_playercard.png'} width={75} height={75} alt={'playercard'}/>              
             </div>
           </div>          
           <nav className={styles.navBar}>
@@ -31,8 +31,8 @@ export default function RootLayout({
           {children}
         </div>
         <footer className={styles.footer}>
-          <Link href="https://twitch.tv/mrgrim"><Image src={'/mrgrim.png'} width={82} height={80} alt={'mrgrim twitch'} /></Link>
-          <Link href="https://www.thunderdomequake.com"><Image src={'/backbutton3.png'} width={190} height={80} alt={'Return'} /></Link>
+          <Link href="https://twitch.tv/mrgrim" target="_blank"><img src={'/mrgrim.png'} width={82} height={80} alt={'mrgrim twitch'} /></Link>
+          <Link href="https://www.thunderdomequake.com"><img src={'/backbutton.png'} width={190} height={80} alt={'Return'} /></Link>
         </footer>
       </body>
     </html>

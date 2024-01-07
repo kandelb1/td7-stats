@@ -4,7 +4,7 @@
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  background-image: url('../public/td_bg1.jpg');
+  background-image: url('../public/td_bg.jpg');
   background-color: #273f57;
   background-position: center top;
   background-repeat: no-repeat;
@@ -45,6 +45,7 @@
       flex-flow: row nowrap;
       align-items: center;
       gap: 1em;
+	    padding-left: 100px;
       background-color:rgb(33, 34, 34);
       height: 2em;
 
@@ -83,6 +84,7 @@
     width: 1000px;
     height: 93px;
     background-color: #cccccc;
+	  background-image: url('../public/footerbar.png');
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
