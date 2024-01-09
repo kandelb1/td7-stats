@@ -42,7 +42,7 @@ export default function PlayersTable(props: IProps) {
         <input type='radio' name='sort' id='kills' checked={sortedColumn == Columns.Kills} onChange={() => sortingChanged(Columns.Kills)}/>
         <label htmlFor='kills'>Sort By Kills</label>
         <input type='radio' name='sort' id='accuracy' checked={sortedColumn == Columns.Accuracy} onChange={() => sortingChanged(Columns.Accuracy)}/>
-        <label htmlFor='Accuracy'>Sort By Accuracy</label>
+        <label htmlFor='accuracy'>Sort By Accuracy</label>
       </div>
       <table>
         <thead>

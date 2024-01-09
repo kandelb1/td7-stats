@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { Database, open } from 'sqlite'
-import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics } from './definitions';
+import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo } from './definitions';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>;
 
@@ -313,6 +313,62 @@ export async function getPlayerTeamId(playerId: string): Promise<string | null> 
   return teamId['teamId'];
 }
 
+export async function getGameInfo(gameId: string): Promise<GameInfo | null> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+
+  // check if this gameId exists before doing anything
+  let validGameId = await db.get("SELECT EXISTS(\
+                                      SELECT 1 FROM games\
+                                      WHERE id == ?\
+                                    ) AS valid", gameId);
+  if(validGameId['valid'] == 0) { // stop now
+    console.error(`Ignoring invalid gameId: ${gameId}`);
+    return null;
+  }
+
+  let basicInfo = await db.get("SELECT games.date, maps.name AS map, servers.name AS server FROM games\
+                              INNER JOIN maps ON maps.id = games.mapId\
+                              INNER JOIN servers ON servers.id = games.serverId\
+                              WHERE games.id = ?", gameId);
+  
+  let teams = await db.all("SELECT tgStats.teamId, teams.name AS teamName, tgStats.score FROM tgStats\
+                          INNER JOIN teams ON teams.id = tgStats.teamId\
+                          WHERE tgStats.gameId = ?\
+                          ORDER BY score DESC", gameId);
+
+  for(let i = 0; i < 2; i++) {
+    let teamPlayers = await db.all("SELECT players.id AS playerId, playerNames.name AS playerName, pgStats.score, pgStats.kills,\
+                                  pgStats.deaths, pgStats.damageDealt, pgStats.damageTaken FROM players\
+                                  INNER JOIN pgStats ON pgStats.playerId = players.id\
+                                  INNER JOIN playerNames ON playerNames.playerId = players.id AND playerNames.gameId = ?\
+                                  WHERE pgStats.gameId = ? AND players.teamId = ?\
+                                  ORDER BY score DESC", gameId, gameId, teams[i]['teamId']);
+    for(let j = 0; j < teamPlayers.length; j++) {
+      let weaponStats = await db.all("SELECT weaponName, damage, kills, shotsFired, shotsHit FROM pwStats\
+                                    WHERE gameId = ? AND playerId = ?", gameId, teamPlayers[j]['playerId']);
+      teamPlayers[j]['weapons'] = weaponStats;
+    }
+
+    teams[i]['players'] = teamPlayers;
+  }
+
+
+  let answer: GameInfo = {
+    map: basicInfo['map'],
+    server: basicInfo['server'],
+    date: basicInfo['date'],
+    teams: teams,
+  };
+
+  return answer;
+}
+
 export async function getAllPlayerIds() {
   if(!db) {
     console.log('connecting to database');
@@ -335,5 +391,17 @@ export async function getAllTeamIds() {
     });
   }
   let answer = await db.all("SELECT id FROM teams");
+  return answer;
+}
+
+export async function getAllGameIds() {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+  let answer = await db.all("SELECT id FROM games");
   return answer;
 }

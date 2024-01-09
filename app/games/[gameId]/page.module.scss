@@ -1,0 +1,68 @@
+.gameContainer {
+  width: 100%;
+  // width: 80%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  // background-position: center center;
+  // background-color:rgb(255, 255, 255, 0.25);
+  
+  .scoreboardContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-top: 1em;
+
+    .scoreboard {
+      width: 35em;
+      height: 15em;
+      text-align: left;
+      color: #fefefe;
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      caption {
+        font-family: 'Handel Gothic';
+        font-size: 150%;
+        background-color: rgb(65, 64, 64);
+        padding: 0.25em;
+      }
+
+      td, th {
+        vertical-align: middle;
+        padding: 0.5em;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+      }
+
+      thead {
+        background-color: rgb(65, 64, 64);
+
+        th {
+          font-family: 'Handel Gothic';
+          font-size: 120%;          
+        }
+      }
+
+      tbody {
+        background-color: rgb(65, 64, 64);
+        // tr:nth-child(even) {          
+        //   background-color: rgb(65, 64, 64);
+        // }
+
+        // tr:nth-child(odd) {          
+        //   background-color: rgb(136, 134, 134);
+        // }
+
+        tr:hover {
+          background-color: rgba(0, 42, 97, 0.781);
+        }
+      }
+    }
+  }
+}

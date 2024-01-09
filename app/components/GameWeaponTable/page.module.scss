@@ -1,0 +1,57 @@
+.tableContainer {
+  margin-top: 1em;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+
+  .inputBox {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+
+  .weaponStats {
+    margin-top: 1em;
+    border: 1px solid black;
+    width: 60em;
+    min-height: 30em;
+    text-align: left;
+    background-color: rgb(79, 79, 83);
+    color: #fefefe;
+
+    .accuracyBox {
+      display: flex;
+      flex-flow: column nowrap;
+
+      h2 {
+        color: gray;
+        font-size: 75%;
+      }
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    th {
+      font-family: 'Handel Gothic';
+      img {
+        vertical-align: top;        
+      }
+    }
+
+    th, td {
+      padding: 0.5em;
+      border-top: 1px solid black;
+      border-bottom: 1px solid black;
+    }
+
+    tbody {
+
+      tr:hover {
+        background-color: rgba(0, 42, 97, 0.781);
+      }
+    }
+  }
+}

@@ -96,3 +96,29 @@ export type PlayerSummary = {
   recentMatches: {date: number, gameId: number; map: string; playerRank: number; teamScore: number; enemyTeamScore: number}[];
   recentCompetitors: {playerId: number; name: string;}[];
 }
+
+export type GameInfo = {
+  map: string;
+  server: string;
+  date: number;
+  teams: TeamGameInfo[]; // this will always have 2 elements. red team and blue team
+}
+
+export type TeamGameInfo = {
+  teamId: number;
+  teamName: string;
+  score: number;
+  // players: {playerId: number; playerName: string; score: number; kills: number; deaths: number; damageDealt: number; damageTaken: number}[];
+  players: PlayerGameStats[];
+}
+
+export type PlayerGameStats = {
+  playerId: number;
+  playerName: string;
+  score: number;
+  kills: number;
+  deaths: number;
+  damageDealt: number;
+  damageTaken: number;
+  weapons: WeaponStats[];
+}
