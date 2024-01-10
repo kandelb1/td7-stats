@@ -19,9 +19,9 @@ export default function TeamNavbar(props: IProps) {
 
   return (
     <div className={styles.navBar}>
-      <Link href={`/teams/${props.teamId}/summary`} className={`${styles.link} ${matchPathname(pathname, 'summary')}`}>Summary</Link>
-      <Link href={`/teams/${props.teamId}/statistics`} className={`${styles.link} ${matchPathname(pathname, 'statistics')}`}>Statistics</Link>
-      <Link href={`/teams/${props.teamId}/matches`} className={`${styles.link} ${matchPathname(pathname, 'matches')}`}>Matches</Link>
+      <Link href={`/teams/${props.teamId}/summary`} className={`${styles.link} ${matchPathname(pathname, 'summary/')}`}>Summary</Link>
+      <Link href={`/teams/${props.teamId}/statistics`} className={`${styles.link} ${matchPathname(pathname, 'statistics/')}`}>Statistics</Link>
+      <Link href={`/teams/${props.teamId}/matches`} className={`${styles.link} ${matchPathname(pathname, 'matches/')}`}>Matches</Link>
     </div>
   );
 }
