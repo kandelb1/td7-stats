@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { Database, open } from 'sqlite'
-import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAwards, PlayerAward } from './definitions';
+import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAward } from './definitions';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>;
 
