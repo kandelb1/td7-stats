@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { Database, open } from 'sqlite'
-import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo } from './definitions';
+import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAwards, PlayerAward } from './definitions';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>;
 
@@ -367,6 +367,36 @@ export async function getGameInfo(gameId: string): Promise<GameInfo | null> {
   };
 
   return answer;
+}
+
+export async function getPlayerAwards(playerId: string): Promise<PlayerAward[] | null> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+
+  // check if this playerId exists before doing anything
+  let validPlayerId = await db.get("SELECT EXISTS(\
+                                  SELECT 1 FROM players\
+                                  WHERE id == ?\
+                                  ) AS valid", playerId);
+  if(validPlayerId['valid'] == 0) { // stop now
+    console.error(`Ignoring invalid playerId: ${playerId}`);
+    return null;
+  }
+
+  let awards = await db.all("SELECT awards.id, awards.name, awards.description, COUNT(awardStats.playerId) AS amountEarned, (\
+                              SELECT COUNT(1) FROM awardStats WHERE awardId = awards.id\
+                            ) AS totalEarned, (\
+                              SELECT COUNT(DISTINCT playerId) FROM awardStats WHERE awardId = awards.id\
+                            ) AS playersEarned FROM awards\
+                            LEFT JOIN awardStats ON awards.id = awardStats.awardId AND awardStats.playerId = ?\
+                            GROUP BY awards.id\
+                            ORDER BY amountEarned DESC, awards.name", playerId);
+  return awards;
 }
 
 export async function getAllPlayerIds() {

@@ -1,0 +1,63 @@
+.awardsContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.1em;
+  width: 100%;
+  text-align: center;
+
+  h1 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .award {
+    // width: 100%;
+    padding: 0.25em;
+    border: 1px solid black;
+    border-radius: 15px;
+    text-align: center;
+    background-color: rgba(47, 126, 163, 0.712);
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+
+    .awardLeft {
+      flex: 1;
+      text-align: left;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      // border: 1px solid green;
+
+      img {
+        margin-right: 0.5em;
+      }
+
+      h2 {
+        font-family: 'Handel Gothic';
+        font-size: 150%;
+      }      
+    }
+
+    .awardRight {
+      flex: 1;
+      // border: 1px solid red;
+      text-align: left;
+      display: flex;
+      align-items: center;
+
+      ul {
+        margin-left: 2em;
+        list-style-type: circle;
+        list-style-position: inside;
+
+      }
+    }
+  }
+
+  .notEarned {
+    background-color: gray;
+  }
+
+}

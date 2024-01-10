@@ -15,7 +15,6 @@ export default function PlayerStatistics(props: IProps) {
 
 export async function generateStaticParams() {
   const playerIds = await getAllPlayerIds();
-  let test: number = 5;
   return playerIds.map(x => {
     return {
       playerId: x.id.toString(),

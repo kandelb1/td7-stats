@@ -122,3 +122,15 @@ export type PlayerGameStats = {
   damageTaken: number;
   weapons: WeaponStats[];
 }
+
+export type PlayerAward = {
+  name: string;
+  description: string;
+  amountEarned: number;
+  totalEarned: number;
+  playersEarned: number;
+}
+
+// export type PlayerAwards = {
+//   awards: {name: string; amountEarned: number;}[];
+// }
