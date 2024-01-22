@@ -131,6 +131,20 @@ export type PlayerAward = {
   playersEarned: number;
 }
 
-// export type PlayerAwards = {
-//   awards: {name: string; amountEarned: number;}[];
-// }
+export type PlayerRecentMatch = {
+  date: number;
+  gameId: number;
+  enemyTeamName: string;
+  enemyTeamId: number;
+  enemyTeamScore: number;
+  teamScore: number;
+  serverName: string;
+  mapNumber: number;
+  mapName: string;
+  rank: number;
+  score: number;
+  kills: number;
+  deaths: number;
+  damageDealt: number;
+  damageTaken: number;
+}

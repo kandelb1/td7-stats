@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { Database, open } from 'sqlite'
-import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAward } from './definitions';
+import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAward, PlayerRecentMatch } from './definitions';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>;
 
@@ -397,6 +397,42 @@ export async function getPlayerAwards(playerId: string): Promise<PlayerAward[] |
                             GROUP BY awards.id\
                             ORDER BY amountEarned DESC, awards.name", playerId);
   return awards;
+}
+
+// this data is for the /player/matches page, NOT the /player/summary page
+// TODO: combine them?
+export async function getPlayerRecentMatches(playerId: string, teamId: string): Promise<PlayerRecentMatch[] | null> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+
+  // check if this playerId exists before doing anything
+  let validPlayerId = await db.get("SELECT EXISTS(\
+                                  SELECT 1 FROM players\
+                                  WHERE id == ?\
+                                  ) AS valid", playerId);
+  if(validPlayerId['valid'] == 0) { // stop now
+    console.error(`Ignoring invalid playerId: ${playerId}`);
+    return null;
+  }
+
+  let test = await db.all("SELECT pgStats.gameId, pgStats.score, pgStats.rank, games.date, maps.name AS mapName,\
+                          pgStats.kills, pgStats.deaths, pgStats.damageDealt, pgStats.damageTaken,\
+                          tgStats.score AS teamScore, tgStats.enemyScore AS enemyTeamScore, tgStats.enemyTeamId, teams.name AS enemyTeamName,\
+                          servers.name AS serverName FROM pgStats\
+                          INNER JOIN games ON pgStats.gameId = games.id\
+                          INNER JOIN maps ON games.mapId = maps.id\
+                          INNER JOIN tgStats ON pgStats.gameId = tgStats.gameId\
+                          INNER JOIN servers ON games.serverId = servers.id\
+                          INNER JOIN teams ON tgStats.enemyTeamId = teams.id\
+                          WHERE playerId = ? AND tgStats.teamId = ?\
+                          ORDER BY date DESC", playerId, teamId);
+
+  return test;
 }
 
 export async function getAllPlayerIds() {

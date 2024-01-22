@@ -1,0 +1,16 @@
+@import '../../../variables';
+
+.matchesContainer {
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  margin-top: 5px;
+  color: white;
+
+  > div {
+    background-color: gray;
+    &:nth-child(even) {
+      background-color: rgb(85, 83, 83);
+    }
+  }
+}

@@ -1,0 +1,56 @@
+.match {
+  display: flex;
+  flex-flow: row nowrap;
+  cursor: pointer;
+
+
+  .map {
+    width: 150px;
+    height: 100px;
+    background-position: center center;
+    background-size: cover;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+
+    h1 {
+      color: yellow;
+      font-size: 175%;
+      text-shadow: 2px 2px 1px black;
+    }
+
+    h2 {
+      text-shadow: 2px 2px 1px black;
+    }
+  }
+  
+  .gameInfo {
+    // flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    margin-left: 5px;
+    // border: 1px solid red;
+    width: 25em;
+
+    h1 {
+      color: yellow;
+    }
+
+    span {
+      text-decoration: underline;
+    }
+
+  }
+
+  .personalInfo {
+    // border: 1px solid green;
+    // flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+
+    h1 {
+      color: yellow;
+    }
+  }
+}
