@@ -49,7 +49,9 @@ export default async function PlayerSummary(props: IProps) {
         <div className={styles.recentAwards}>
           <h1>Recent Awards</h1>
           {playerSummary.recentAwards.length == 0
-            ? <p>No awards earned.</p>
+            ? <div className={styles.noAwards}>
+                <p>No recent awards.</p>
+              </div>
             : playerSummary.recentAwards.map((award, i)=> {
               return (
                 <PlayerRecentAward name={award.name} description={award.description} gameId={award.gameId} date={award.date} key={i}/>

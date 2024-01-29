@@ -44,6 +44,13 @@
       border-radius: 8px;
       box-shadow: 10px 5px 5px gray;
       background-color: rgba(245, 245, 245, 0.5);
+
+      .noAwards {
+        display: flex;
+        align-items: center;
+        // border: 1px solid blue;
+        height: 75%; // might be wrong on different resolutions
+      }
     }
   }
 
