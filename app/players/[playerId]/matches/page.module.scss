@@ -7,6 +7,11 @@
   margin-top: 5px;
   color: white;
 
+  .noData {
+    color: black;
+    margin-top: 0.25em;
+  }
+
   > div {
     background-color: gray;
     &:nth-child(even) {

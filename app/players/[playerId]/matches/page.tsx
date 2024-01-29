@@ -21,7 +21,9 @@ export default async function PlayerMatches(props: IProps) {
 
   return (
     <div className={styles.matchesContainer}>
-      {matches.map(m => {        
+      {matches.length == 0
+      ? <h1 className={styles.noData}>No matches played yet.</h1>
+      : matches.map(m => {        
         return (
           <PlayerMatch match={m}/>
         );

@@ -22,6 +22,8 @@ export default async function PlayerSummary(props: IProps) {
   const playerSummary = await getPlayerSummary(props.params.playerId, teamId);
   if(!playerSummary) notFound();
 
+  const accuracy = playerSummary.shots != 0 ? (playerSummary.hits / playerSummary.shots * 100).toFixed(2) : '0';
+
   return (
     <div className={styles.summaryContainer}>
       <div className={styles.topContainer}>
@@ -29,7 +31,7 @@ export default async function PlayerSummary(props: IProps) {
           <h1>Vital Stats</h1>
           <p><b>Wins / Losses: </b>{playerSummary.wins} / {playerSummary.losses}</p>
           <p><b>Hits / Shots: </b>{playerSummary.hits} / {playerSummary.shots}</p>
-          <p><b>Accuracy: </b>{(playerSummary.hits / playerSummary.shots * 100).toFixed(2)}%</p>
+          <p><b>Accuracy: </b>{accuracy}%</p>
           <p><b>Frags / Deaths: </b>{playerSummary.frags} / {playerSummary.deaths}</p>
           <p><b>Damage Dealt / Taken: </b>{playerSummary.damageDealt} / {playerSummary.damageTaken}</p>
         </div>
@@ -48,7 +50,11 @@ export default async function PlayerSummary(props: IProps) {
       <div className={styles.recentMatches}>
         <h1>Recent Matches</h1>
         <div className={styles.matchesContainer}>
-          {playerSummary.recentMatches.map(m => {
+          {playerSummary.recentMatches.length == 0 
+          ? <div className={styles.noData}>
+              <p>No recent matches.</p>
+            </div>
+          : playerSummary.recentMatches.map(m => {
             return (
               <PlayerRecentMatch gameId={m.gameId} playerRank={m.playerRank} map={m.map}
                 teamScore={m.teamScore} enemyScore={m.enemyTeamScore} key={m.gameId}/>
@@ -59,7 +65,11 @@ export default async function PlayerSummary(props: IProps) {
         <div className={styles.recentCompetitors}>
           <h1>Recent Competitors</h1>
           <div className={styles.competitorsContainer}>
-            {playerSummary.recentCompetitors.map(c => {
+            {playerSummary.recentCompetitors.length == 0
+            ? <div className={styles.noData}>
+                <p>No recent competitors.</p>
+              </div>
+            : playerSummary.recentCompetitors.map(c => {
               return (
                 <PlayerRecentCompetitor playerId={c.playerId} playerName={c.name} key={c.playerId}/>
               );

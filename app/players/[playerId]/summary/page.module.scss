@@ -36,6 +36,14 @@
     }
   }
 
+  .noData {
+    height: 108px; // same height as <PlayerRecentMatch/>
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .recentMatches {
     margin-top: 1em;
     width: 100%; 
@@ -53,7 +61,6 @@
     // border: 1px solid yellow;
 
     .competitorsContainer {
-      margin-top: 1em;
       display: flex;
       flex-flow: row wrap;      
       gap: 10px;
