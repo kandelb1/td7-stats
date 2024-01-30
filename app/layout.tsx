@@ -16,10 +16,6 @@ export default function RootLayout({
             <Link href={'/'}>
 			        <img src={'/td_top_logo.png'} width={126} height={96} alt={'ql logo'} className={styles.logo}/>
             </Link>
-            <div className={styles.playerProfile}>
-              <p>Welcome back, vajayyjayy.</p>
-              <img src={'/placeholder_playercard.png'} width={75} height={75} alt={'playercard'}/>              
-            </div>
           </div>          
           <nav className={styles.navBar}>
             <Link href="/teams">Teams</Link>

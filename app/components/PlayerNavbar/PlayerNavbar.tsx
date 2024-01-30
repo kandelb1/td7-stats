@@ -20,7 +20,6 @@ export default function PlayerNavbar(props: IProps) {
   return (
     <div className={styles.navBar}>
       <Link href={`/players/${props.playerId}/summary`} className={`${styles.link} ${matchPathname(pathname, 'summary/')}`}>Summary</Link>
-      <Link href={`/players/${props.playerId}/statistics`} className={`${styles.link} ${matchPathname(pathname, 'statistics/')}`}>Statistics</Link>
       <Link href={`/players/${props.playerId}/awards`} className={`${styles.link} ${matchPathname(pathname, 'awards/')}`}>Awards</Link>
       <Link href={`/players/${props.playerId}/matches`} className={`${styles.link} ${matchPathname(pathname, 'matches/')}`}>Matches</Link>
     </div>
