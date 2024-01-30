@@ -9,13 +9,13 @@ interface IProps {
 }
 
 enum League {
-  Red,
-  Blue,
+  Red = 1,
+  Blue = 2,
 }
 
 export default function TeamsList(props: IProps){
   const [league, setLeague] = useState(League.Red);
-  const teamsInLeague = props.teams.filter(t => (league == League.Red) ? t.id % 2 == 0 : t.id % 2 == 1); // TODO: replace this when leagues are added to database
+  const teamsInLeague = props.teams.filter(t => t.division == league);
 
   return (
     <div className={styles.container}>

@@ -2,6 +2,7 @@ export type Team = {
   id: number;
   name: string;
   roster: {id: number; name: string;}[];
+  division: number;
 };
 
 export type Map = {

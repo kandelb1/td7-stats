@@ -3,12 +3,13 @@
 .teamBox {
   border: 1px solid $red;
   border-radius: 10px;
-  width: 40em;
-  height: 20em;
+  width: 40em;  
+  min-height: 20em;
   text-align: center;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
+  background-color: rgba(245, 245, 245, 0.5);
 
   a {
     text-decoration: none;
@@ -23,11 +24,12 @@
     display: flex;
     flex-flow: row wrap;
     // border: 1px solid green;
-    width: 80%;
-    height: 80%;
+    // width: 
+    // height: 100%;
     gap: 10px;
 
     .playerBox {
+      width: 12em;
       // border: 1px solid red;
       display: flex;
       flex-flow: row nowrap;
