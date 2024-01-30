@@ -420,7 +420,7 @@ export async function getPlayerRecentMatches(playerId: string, teamId: string): 
     return null;
   }
 
-  let test = await db.all("SELECT pgStats.gameId, pgStats.score, pgStats.rank, games.date, maps.name AS mapName,\
+  let test = await db.all("SELECT pgStats.gameId, pgStats.score, pgStats.rank, games.date, games.mapNum AS mapNumber, maps.name AS mapName,\
                           pgStats.kills, pgStats.deaths, pgStats.damageDealt, pgStats.damageTaken,\
                           tgStats.score AS teamScore, tgStats.enemyScore AS enemyTeamScore, tgStats.enemyTeamId, teams.name AS enemyTeamName,\
                           servers.name AS serverName FROM pgStats\

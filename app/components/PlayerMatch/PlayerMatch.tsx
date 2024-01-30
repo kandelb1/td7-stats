@@ -52,7 +52,7 @@ export default function PlayerMatch(props: IProps) {
           <h1>{match.mapName}</h1>
           <p>{dateStr}</p>
           <p>{match.serverName}</p>
-          <p>Map TODO vs. <span onClick={handleTeamClick}>{match.enemyTeamName}</span></p>
+          <p>Map {match.mapNumber} vs. <span onClick={handleTeamClick}>{match.enemyTeamName}</span></p>
         </div>
         <div className={styles.personalInfo}>
           <h1>Personal</h1>
