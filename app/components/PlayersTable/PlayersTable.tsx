@@ -62,8 +62,8 @@ export default function PlayersTable(props: IProps) {
                 <td>#{i + 1}</td>
                 <td><Link href={`/players/${p.id}`}><img src='/placeholder_player.png' width={64} height={64} alt='player picture' />{p.name}</Link></td>
                 <td><Link href={`/teams/${p.teamId}`}>{p.teamName}</Link></td>
-                <td>{p.damageDealt}</td>
-                <td>{p.kills}</td>
+                <td>{p.damageDealt.toLocaleString('en-US')}</td>
+                <td>{p.kills.toLocaleString('en-US')}</td>
                 <td>{p.accuracy.toFixed(2)}%</td>
               </tr>
             );
