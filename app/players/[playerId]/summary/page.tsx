@@ -43,7 +43,7 @@ export default async function PlayerSummary(props: IProps) {
             <li><b>Hits / Shots: </b>{commaString(playerSummary.hits)} / {commaString(playerSummary.shots)}</li>
             <li><b>Accuracy: </b>{accuracy}%</li>
             <li><b>Frags / Deaths: </b>{commaString(playerSummary.frags)} / {commaString(playerSummary.deaths)} (<GoodOrBadText value={kdRatio} threshold={1}>{kdRatio.toFixed(2)}</GoodOrBadText> kdr)</li>
-            <li><b>Damage Dealt / Taken: </b>{commaString(playerSummary.damageDealt)} / {commaString(playerSummary.damageTaken)} (<GoodOrBadText value={netDamage} threshold={0}>{netDamage.toLocaleString('en-US')}</GoodOrBadText> net)</li>
+            <li><b>Damage Dealt / Taken: </b>{commaString(playerSummary.damageDealt)} / {commaString(playerSummary.damageTaken)} (<GoodOrBadText value={netDamage} threshold={0} notEqualTo={true}>{netDamage.toLocaleString('en-US')}</GoodOrBadText> net)</li>
           </ul>          
         </div>
         <div className={styles.recentAwards}>
