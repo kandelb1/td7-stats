@@ -62,7 +62,7 @@ export default async function Game(props: IProps) {
                       <td><Link href={`/players/${p.playerId}`} dangerouslySetInnerHTML={{__html: p.playerName}}></Link></td>
                       <td>{p.score}</td>
                       <td>{p.kills}/{p.deaths}</td>
-                      <td>{p.damageDealt}</td>
+                      <td>{p.damageDealt.toLocaleString('en-US')}</td>
                     </tr>
                   );
                 })}

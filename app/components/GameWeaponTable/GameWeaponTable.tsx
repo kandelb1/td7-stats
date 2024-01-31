@@ -39,8 +39,7 @@ export default function GameWeaponTable(props: IProps) {
       case DisplayOptions.Kills:
         return <p>{weapon.kills ? weapon.kills : ''}</p>
       case DisplayOptions.Damage:
-        return <p>{weapon.damage ? weapon.damage : ''}</p>
-        
+        return <p>{weapon.damage ? weapon.damage.toLocaleString('en-US') : ''}</p>   
     }
   }
 
