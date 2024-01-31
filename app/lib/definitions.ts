@@ -99,7 +99,8 @@ export type PlayerSummary = {
 }
 
 export type GameInfo = {
-  map: string;
+  mapName: string;
+  mapNumber: number;
   server: string;
   date: number;
   teams: TeamGameInfo[]; // this will always have 2 elements. red team and blue team
@@ -108,9 +109,10 @@ export type GameInfo = {
 export type TeamGameInfo = {
   teamId: number;
   teamName: string;
+  clanTag: string;
   score: number;
-  // players: {playerId: number; playerName: string; score: number; kills: number; deaths: number; damageDealt: number; damageTaken: number}[];
   players: PlayerGameStats[];
+  color: number;
 }
 
 export type PlayerGameStats = {

@@ -33,18 +33,23 @@ export default async function Game(props: IProps) {
 
   return (
     <div className={styles.gameContainer}
-    /* style={{backgroundImage: `url('/levelshots/${gameInfo.map}.jpg')`}} */>
-      <p>{dateStr}</p>
-      <p>Server: {gameInfo.server}</p>
-      <p>Map: {gameInfo.map}</p>
+    style={{backgroundImage: `url('/levelshots/${gameInfo.mapName}.jpg')`}}>
+      <div className={styles.header}>
+        <h1>Map {gameInfo.mapNumber} &nbsp;
+          <Link href={`/teams/${gameInfo.teams[0].teamId}`}>{gameInfo.teams[0].clanTag}</Link> vs.&nbsp;
+          <Link href={`/teams/${gameInfo.teams[1].teamId}`}>{gameInfo.teams[1].clanTag}</Link></h1>
+        <p>{dateStr}</p>
+        <p>Server: {gameInfo.server}</p>
+        <p>Map: {gameInfo.mapName}</p>
+      </div>
       <div className={styles.scoreboardContainer}>
         {gameInfo.teams.map(t => {
           return (
-            <table className={styles.scoreboard}>
-              <caption className={isWinningTeam(t, gameInfo.teams) ? 'ql2' : 'ql1'}>{t.teamName}: {t.score}</caption>
+            <table className={`${styles.scoreboard} ${t.color == 1 ? styles.redTeam : styles.blueTeam}`}>
+              <caption className={isWinningTeam(t, gameInfo.teams) ? 'ql2' : 'ql1'}><Link href={`/teams/${t.teamId}`}>{t.teamName}</Link>: {t.score}</caption>
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th style={{width: '10em'}}>Name</th>
                   <th>Score</th>
                   <th>K/D</th>
                   <th>Damage</th>

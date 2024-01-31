@@ -4,7 +4,7 @@ import styles from './page.module.scss';
 import { useState } from 'react';
 import Link from 'next/link';
 
-const WEAPON_NAMES = ['rl', 'lg', 'rg', 'pg', 'gl', 'sg', 'mg', 'hmg', 'gt'];
+const WEAPON_NAMES = ['rl', 'lg', 'rg', 'pg', 'gl', 'sg', 'mg', 'gt'];
 
 enum DisplayOptions {
   Accuracy,
@@ -32,14 +32,51 @@ export default function GameWeaponTable(props: IProps) {
         }
         return (
           <div className={styles.accuracyBox}>
-            <h1>{`${(weapon.shotsHit / weapon.shotsFired * 100).toFixed(0)}%`}</h1>
+            <h1>{`${weapon.accuracy}%`}</h1>
             <h2>({weapon.shotsHit} / {weapon.shotsFired})</h2>
           </div>
         );
       case DisplayOptions.Kills:
-        return <p>{weapon.kills}</p>
+        return <p>{weapon.kills ? weapon.kills : ''}</p>
       case DisplayOptions.Damage:
-        return <p>{weapon.damage}</p>
+        return <p>{weapon.damage ? weapon.damage : ''}</p>
+        
+    }
+  }
+
+  // TODO: could be cleaner
+  function isHighestValue(weapon: WeaponStats): boolean {
+    switch(display) {
+      case DisplayOptions.Accuracy:
+        return Math.max(
+          ...props.players.map(p => {
+            let weap = p.weapons.find(w => w.weaponName == weapon.weaponName);
+            if(weap) {
+              return weap.accuracy
+            }
+            return 0;
+          })
+        ) <= weapon.accuracy;
+      case DisplayOptions.Damage:
+        return Math.max(
+          ...props.players.map(p => {
+            let weap = p.weapons.find(w => w.weaponName == weapon.weaponName);
+            if(weap) {
+              return weap.damage;
+            }
+            return 0;
+          })
+        ) <= weapon.damage;
+      case DisplayOptions.Kills:
+        return Math.max(
+          ...props.players.map(p => {
+            let weap = p.weapons.find(w => w.weaponName == weapon.weaponName);
+            if(weap) {
+              return weap.kills
+            }
+            return 0;
+          })
+        ) <= weapon.kills;
     }
   }
 
@@ -76,7 +113,7 @@ export default function GameWeaponTable(props: IProps) {
                   let weapon = p.weapons.find(w => w.weaponName == weaponName);
                   if(weapon) {
                     return (
-                      <td key={weaponName}>{getTableValue(weapon)}</td>
+                      <td key={weaponName} className={isHighestValue(weapon) ? styles.gold : ''}>{getTableValue(weapon)}</td>
                     );
                   }else {
                     return (

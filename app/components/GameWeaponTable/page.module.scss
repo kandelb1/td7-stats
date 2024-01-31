@@ -8,16 +8,24 @@
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
+    color: yellow;
+    text-decoration: 2px 2px 1px black;
+    background-color: rgb(60, 60, 65);
+    padding: 10px;
+    border-radius: 15px;
   }
 
   .weaponStats {
-    margin-top: 1em;
+    // margin-top:
     border: 1px solid black;
+    table-layout: fixed;
     width: 60em;
     min-height: 30em;
     text-align: left;
-    background-color: rgb(79, 79, 83);
+    background-color: rgb(60, 60, 65);
+    // background-color: rgb(33, 34, 34);
     color: #fefefe;
+    
 
     .accuracyBox {
       display: flex;
@@ -35,9 +43,12 @@
     }
 
     th {
+      width: 6em;
+      height: 2em;
+      // border: 1px solid blue;
       font-family: 'Handel Gothic';
       img {
-        vertical-align: top;        
+        vertical-align: top;
       }
     }
 
@@ -45,12 +56,20 @@
       padding: 0.5em;
       border-top: 1px solid black;
       border-bottom: 1px solid black;
+      vertical-align: middle;
     }
 
     tbody {
 
-      tr:hover {
-        background-color: rgba(0, 42, 97, 0.781);
+      tr {
+        height: 3.5em;
+        &:hover {
+          background-color: rgba(0, 42, 97, 0.781);
+        }
+      }
+
+      .gold {
+        color: yellow;
       }
     }
   }

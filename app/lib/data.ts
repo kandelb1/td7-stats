@@ -332,12 +332,12 @@ export async function getGameInfo(gameId: string): Promise<GameInfo | null> {
     return null;
   }
 
-  let basicInfo = await db.get("SELECT games.date, maps.name AS map, servers.name AS server FROM games\
+  let basicInfo = await db.get("SELECT games.date, games.mapNum, maps.name AS mapName, servers.name AS server FROM games\
                               INNER JOIN maps ON maps.id = games.mapId\
                               INNER JOIN servers ON servers.id = games.serverId\
                               WHERE games.id = ?", gameId);
   
-  let teams = await db.all("SELECT tgStats.teamId, teams.name AS teamName, tgStats.score FROM tgStats\
+  let teams = await db.all("SELECT tgStats.teamId, teams.name AS teamName, teams.clanTag, tgStats.score, tgstats.color FROM tgStats\
                           INNER JOIN teams ON teams.id = tgStats.teamId\
                           WHERE tgStats.gameId = ?\
                           ORDER BY score DESC", gameId);
@@ -350,7 +350,8 @@ export async function getGameInfo(gameId: string): Promise<GameInfo | null> {
                                   WHERE pgStats.gameId = ? AND players.teamId = ?\
                                   ORDER BY score DESC", gameId, gameId, teams[i]['teamId']);
     for(let j = 0; j < teamPlayers.length; j++) {
-      let weaponStats = await db.all("SELECT weaponName, damage, kills, shotsFired, shotsHit FROM pwStats\
+      let weaponStats = await db.all("SELECT weaponName, damage, kills, shotsFired, shotsHit,\
+                                      round(CAST(shotsHit AS float) / shotsFired * 100) AS accuracy FROM pwStats\
                                     WHERE gameId = ? AND playerId = ?", gameId, teamPlayers[j]['playerId']);
       teamPlayers[j]['weapons'] = weaponStats;
     }
@@ -360,7 +361,8 @@ export async function getGameInfo(gameId: string): Promise<GameInfo | null> {
 
 
   let answer: GameInfo = {
-    map: basicInfo['map'],
+    mapName: basicInfo['mapName'],
+    mapNumber: basicInfo['mapNum'],
     server: basicInfo['server'],
     date: basicInfo['date'],
     teams: teams,
