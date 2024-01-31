@@ -93,7 +93,7 @@ export type PlayerSummary = {
   shots: number;
   damageDealt: number;
   damageTaken: number;
-  recentAwards: {name: string; description: string; gameId: number; date: number}[];
+  recentAwards: {name: string; id: number; description: string; gameId: number; date: number}[];
   recentMatches: {date: number, gameId: number; map: string; playerRank: number; teamScore: number; enemyTeamScore: number}[];
   recentCompetitors: {playerId: number; name: string;}[];
 }
@@ -128,6 +128,7 @@ export type PlayerGameStats = {
 
 export type PlayerAward = {
   name: string;
+  id: number;
   description: string;
   amountEarned: number;
   totalEarned: number;

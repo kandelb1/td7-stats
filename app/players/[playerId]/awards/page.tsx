@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import styles from './page.module.scss';
 import { getAllPlayerIds, getPlayerAwards } from '@/app/lib/data';
+import ImageFallback from '@/app/components/ImageFallback/ImageFallback';
 
 interface IProps {
   params: {
@@ -25,7 +26,7 @@ export default async function PlayerAwards(props: IProps) {
         return (
           <div className={`${styles.award} ${award.amountEarned == 0 ? styles.notEarned : ''}`}>
             <div className={styles.awardLeft}>
-              <img src='/medal_accuracy.png' width={64} height={64} alt='award icon'/>
+              <ImageFallback src={`/awards/${award.id}.png`} fallbackSrc={'/medal_accuracy.png'} width={64} height={64} alt='award icon'/>
               <div>
                 <h2>{award.name}</h2>
                 <p>{award.description}</p>
@@ -33,7 +34,7 @@ export default async function PlayerAwards(props: IProps) {
             </div>
             <div className={styles.awardRight}>
               <ul>
-                <li>Earned <b>{award.amountEarned}</b> ({awardPercentage}% of {award.totalEarned}) of this award.</li>
+                <li>Earned <b>{award.amountEarned}</b> ({awardPercentage}% of {award.totalEarned} total) of this award.</li>
                 {/* <li>This award has been earned <b>{award.totalEarned}</b> times in the tournament.</li> */}
                 <li><b>{award.playersEarned}</b> players ({playerPercentage}% of total) have earned this award.</li>
               </ul>

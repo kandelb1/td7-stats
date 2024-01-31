@@ -247,7 +247,7 @@ export async function getPlayerSummary(playerId: string, teamId: string): Promis
                                     SELECT gameId FROM pgStats WHERE pgstats.playerId = ?\
                                   ) AND tgStats.teamId = ?", playerId, teamId);
 
-  let recentAwards = await db.all("SELECT awards.name, awards.description, gameId, games.date FROM awardStats\
+  let recentAwards = await db.all("SELECT awards.name, awards.id, awards.description, gameId, games.date FROM awardStats\
                                   INNER JOIN awards ON awards.id = awardStats.awardId\
                                   INNER JOIN games ON games.id = awardStats.gameId\
                                   WHERE playerId = ?\
