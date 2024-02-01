@@ -54,7 +54,8 @@ export default async function PlayerSummary(props: IProps) {
               </div>
             : playerSummary.recentAwards.map((award, i)=> {
               return (
-                <PlayerRecentAward name={award.name} id={award.id} description={award.description} gameId={award.gameId} date={award.date} key={i}/>
+                <PlayerRecentAward name={award.name} id={award.id} description={award.description} gameId={award.gameId} 
+                                  mapNumber={award.mapNumber} enemyClanTag={award.enemyClanTag} date={award.date} key={i}/>
               );
             })
           }

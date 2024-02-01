@@ -21,6 +21,7 @@
       box-shadow: 10px 5px 5px gray;
       text-align: center;
       background-color: rgba(245, 245, 245, 0.5);
+      padding: 5px;
 
       ul {
         margin-top: 0.25em;
@@ -38,12 +39,15 @@
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
+      gap: 5px;
       flex: 1;
       // background-color: rgb(161, 161, 161);
       border: 1px solid black;
       border-radius: 8px;
       box-shadow: 10px 5px 5px gray;
       background-color: rgba(245, 245, 245, 0.5);
+      // border: 1px solid red;
+      padding: 5px;
 
       .noAwards {
         display: flex;

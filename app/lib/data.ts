@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { Database, open } from 'sqlite'
-import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAward, PlayerRecentMatch } from './definitions';
+import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAward, PlayerRecentMatch, TeamMatches } from './definitions';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>;
 
@@ -157,6 +157,44 @@ export async function getTeamStatistics(teamId: string): Promise<TeamStatistics 
   return answer;
 }
 
+export async function getTeamMatches(teamId: string): Promise<TeamMatches | null> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+
+  // check if this teamId exists before doing anything
+  let validTeamId = await db.get("SELECT EXISTS(\
+                                    SELECT 1 FROM teams\
+                                    WHERE id == ?\
+                                  ) AS valid", teamId);
+  if(validTeamId['valid'] == 0) { // stop now
+    console.error(`Ignoring invalid teamId: ${teamId}`);
+    return null;
+  }
+
+  let matches = await db.all("SELECT matches.id, week, score, enemyTeamId, enemyTeamScore, teams.name AS enemyTeamName FROM matches\
+                            INNER JOIN teams ON matches.enemyTeamId = teams.id\
+                            WHERE teamId = ?\
+                            ORDER BY week", teamId);
+  
+  for(let i = 0; i < matches.length; i++) {
+    matches[i]['games'] = await db.all("SELECT tgStats.score, tgStats.enemyScore, games.date, games.id, games.mapNum AS mapNumber, games.week, maps.name AS mapName FROM tgStats\
+                                      INNER JOIN games ON games.id = tgStats.gameId\
+                                      INNER JOIN maps ON maps.id = games.mapId\
+                                      WHERE tgStats.teamId = ? AND games.week = ?\
+                                      ORDER BY mapNum", teamId, matches[i]['week']);
+  }
+
+  let answer: TeamMatches = {
+    matches: matches,
+  }
+  return answer;
+}
+
 export async function getPlayerList(): Promise<Player[]> {
   if(!db) {
     console.log('connecting to database');
@@ -247,12 +285,15 @@ export async function getPlayerSummary(playerId: string, teamId: string): Promis
                                     SELECT gameId FROM pgStats WHERE pgstats.playerId = ?\
                                   ) AND tgStats.teamId = ?", playerId, teamId);
 
-  let recentAwards = await db.all("SELECT awards.name, awards.id, awards.description, gameId, games.date FROM awardStats\
+  let recentAwards = await db.all("SELECT awards.name, awards.id, awards.description, games.id AS gameId, games.date,\
+                                  games.mapNum AS mapNumber, teams.clanTag AS enemyClanTag FROM awardStats\
                                   INNER JOIN awards ON awards.id = awardStats.awardId\
                                   INNER JOIN games ON games.id = awardStats.gameId\
+                                  INNER JOIN tgStats ON tgStats.gameId = games.id AND tgStats.teamId = ?\
+                                  INNER JOIN teams ON teams.id = tgStats.enemyTeamId\
                                   WHERE playerId = ?\
                                   ORDER BY date DESC\
-                                  LIMIT 3", playerId);
+                                  LIMIT 3", teamId, playerId);
 
   let recentMatches = await db.all("SELECT games.date, pgStats.gameId, maps.name AS map, pgStats.rank AS playerRank,\
                                     tgStats.score AS teamScore, tgStats.enemyScore AS enemyTeamScore FROM games\
