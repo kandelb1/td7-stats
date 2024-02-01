@@ -3,6 +3,7 @@ import { PlayerRecentMatch } from "@/app/lib/definitions";
 import styles from './page.module.scss';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import GoodOrBadText from "../GoodOrBadText/GoodOrBadText";
 
 // TODO: duplicate code 
 function formatRank(rank: number): string {
@@ -29,8 +30,9 @@ export default function PlayerMatch(props: IProps) {
   const dateStr = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`// TODO: duplicate code
   const damageNet = match.damageDealt - match.damageTaken;
   const kdr = match.kills / match.deaths;
-  
 
+  const damageDealtString = match.damageDealt.toString();
+  const damageStr = (match.damageDealt >= 1000) ? `${damageDealtString[0]}.${damageDealtString[1]}k` : match.damageDealt.toString();
 
   function handleClick(e: any) {
     router.push(`/games/${match.gameId}`);
@@ -42,8 +44,7 @@ export default function PlayerMatch(props: IProps) {
   }
 
   return (
-    <div className={styles.match} onClick={handleClick}>
-      <div className={styles.match}>
+    <Link href={`/games/${props.match.gameId}`} className={styles.match} onClick={handleClick}>
         <div className={styles.map} style={{backgroundImage: `url('/levelshots/${match.mapName}.jpg')`}}>
           <h1>{formatRank(match.rank)}</h1>
           <h2>{match.teamScore > match.enemyTeamScore ? 'Win' : 'Loss'}</h2>
@@ -58,9 +59,8 @@ export default function PlayerMatch(props: IProps) {
           <h1>Personal</h1>
           <p>Score: {match.score}</p>
           <p>KDR: <span className={kdr >= 1 ? 'ql2' : 'ql1'}>{kdr.toFixed(2)}</span></p>
-          <p>Net Damage: <span className={damageNet >= 0 ? 'ql2' : 'ql1'}>{damageNet}</span></p>
+          <p>Damage: {damageStr} (<GoodOrBadText value={damageNet} threshold={0} notEqualTo={true}>{damageNet}</GoodOrBadText> net) </p>
         </div>
-      </div>
-    </div>
+    </Link>
   );
 }
