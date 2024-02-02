@@ -17,5 +17,9 @@
     &:nth-child(even) {
       background-color: rgb(85, 83, 83);
     }
+
+    &:hover {
+      background-color: $row-highlight
+    }
   }
 }

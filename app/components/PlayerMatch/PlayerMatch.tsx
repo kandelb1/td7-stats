@@ -47,7 +47,7 @@ export default function PlayerMatch(props: IProps) {
           <h1>Personal</h1>
           <p>Score: {match.score}</p>
           <p>KDR: <span className={kdr >= 1 ? 'ql2' : 'ql1'}>{kdr.toFixed(2)}</span></p>
-          <p>Damage: {damageStr} (<GoodOrBadText value={damageNet} threshold={0} notEqualTo={true}>{damageNet}</GoodOrBadText> net) </p>
+          <span>Damage: {damageStr} (<GoodOrBadText value={damageNet} threshold={0} notEqualTo={true}>{damageNet}</GoodOrBadText> net) </span>
         </div>
     </Link>
   );
