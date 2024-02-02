@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { Database, open } from 'sqlite'
-import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAward, PlayerRecentMatch, TeamMatches } from './definitions';
+import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAward, PlayerRecentMatch, TeamMatch } from './definitions';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>;
 
@@ -157,7 +157,7 @@ export async function getTeamStatistics(teamId: string): Promise<TeamStatistics 
   return answer;
 }
 
-export async function getTeamMatches(teamId: string): Promise<TeamMatches | null> {
+export async function getTeamMatches(teamId: string): Promise<TeamMatch[] | null> {
   if(!db) {
     console.log('connecting to database');
     db = await open({
@@ -182,17 +182,25 @@ export async function getTeamMatches(teamId: string): Promise<TeamMatches | null
                             ORDER BY week", teamId);
   
   for(let i = 0; i < matches.length; i++) {
-    matches[i]['games'] = await db.all("SELECT tgStats.score, tgStats.enemyScore, games.date, games.id, games.mapNum AS mapNumber, games.week, maps.name AS mapName FROM tgStats\
+    matches[i]['games'] = await db.all("SELECT tgStats.score, tgStats.enemyScore, games.date, games.id, games.mapNum AS mapNumber, games.week,\
+                                      maps.name AS mapName, servers.name AS serverName FROM tgStats\
                                       INNER JOIN games ON games.id = tgStats.gameId\
                                       INNER JOIN maps ON maps.id = games.mapId\
+                                      INNER JOIN servers ON servers.id = games.serverId\
                                       WHERE tgStats.teamId = ? AND games.week = ?\
                                       ORDER BY mapNum", teamId, matches[i]['week']);
+    // get the 4 players in each game
+    for(let j = 0; j < matches[i]['games'].length; j++) {
+      matches[i]['games'][j]['roster'] = await db.all("SELECT players.id AS playerId, playerNames.name, pgStats.rank FROM games\
+                                                    INNER JOIN playerNames ON playerNames.gameId = games.id\
+                                                    INNER JOIN players ON players.id = playerNames.playerId\
+                                                    INNER JOIN pgStats ON pgStats.gameId = games.id AND pgStats.playerId = players.id\
+                                                    WHERE games.id = ? AND players.teamId = ?\
+                                                    ORDER BY rank", matches[i]['games'][j]['id'], teamId);
+    }
   }
 
-  let answer: TeamMatches = {
-    matches: matches,
-  }
-  return answer;
+  return matches;
 }
 
 export async function getPlayerList(): Promise<Player[]> {

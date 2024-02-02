@@ -1,0 +1,134 @@
+@import '../../../variables';
+
+.matchesContainer {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  // border: 1px solid red;
+  width: 100%;
+
+  .match {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    border: 1px solid black;
+    width: 100%;
+    background-color: rgb(85, 83, 83);
+    
+    .header {
+      width: 100%;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      color: white;
+      background-color: $td7-dark-blue;
+      border-bottom: 1px solid black;
+      padding: 5px 0;
+
+      a {
+        color: inherit;
+        color: yellow;
+        font-size: inherit;
+      }
+
+      h2 {
+        font-size: 110%;
+      }
+    }
+    
+    .versus {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      justify-content: space-evenly;
+      // border: 1px solid green;
+      width: 30em;
+    }
+
+    .game {
+      display: flex;
+      flex-flow: row nowrap;
+      width: 100%;
+      text-decoration: none;
+      color: white;
+
+      background-color: gray;
+      &:nth-child(even) {
+        background-color: rgb(85, 83, 83);
+      }
+
+      &:hover {        
+        background-color: rgba(22, 22, 107, 0.5);
+      }      
+
+      .map {
+        width: 150px;
+        height: 100px;
+        background-position: center center;
+        background-size: cover;
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+    
+        h1 {
+          font-size: 175%;
+          text-shadow: 2px 2px 1px black;
+        }
+
+        h2 {
+          // text-shadow: 2px 2px 1px black;
+          color: yellow;
+        }
+
+        .win {
+          color: $green;
+        }
+
+        .loss {
+          color: $red;
+        }
+      }
+      
+      .gameInfo {
+        // flex: 1;
+        display: flex;
+        flex-flow: column nowrap;
+        margin-left: 5px;
+        // border: 1px solid red;
+        width: 25em;
+    
+        h1 {
+          color: yellow;
+        }
+    
+        span {
+          text-decoration: underline;
+        }
+    
+      }
+    
+      .roster {
+        // border: 1px solid green;
+        // flex: 1;
+        display: flex;
+        flex-flow: column nowrap;
+    
+        h1 {
+          color: yellow;
+        }
+
+        a {
+          text-decoration: none;
+          color: inherit;
+          // font-size: 200%;
+          &:hover {
+            text-decoration: underline;
+            color: yellow; // makes underline yellow
+          }
+        }
+      }
+    }
+  }
+
+}

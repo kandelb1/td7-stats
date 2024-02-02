@@ -65,22 +65,26 @@ export type TeamStatistics = {
   weaponStats: {weaponName: string; totalDamage: number;}[];
 }
 
-export type TeamMatches = {
-  matches: {
-    week: number;
+export type TeamMatch = {
+  week: number;
+  score: number;
+  enemyTeamId: number;
+  enemyTeamName: string;    
+  enemyTeamScore: number;
+  games: {
+    id: number;
+    date: number;
+    mapName: string;
+    mapNumber: number;
     score: number;
-    enemyTeamId: number;
-    enemyTeamName: string;    
-    enemyTeamScore: number;    
-    games: {
-      id: number;
-      date: number;
-      mapName: string;
-      mapNumber: number;
-      score: number;
-      enemyScore: number;
-    }[],
-  }[];
+    enemyScore: number;
+    serverName: string;
+    roster: {
+      playerId: number;
+      name: string;
+      rank: number;
+    }[];
+  }[],
 }
 
 export type PlayerGame = {
