@@ -1,12 +1,17 @@
+@import '../../variables';
+
 .layoutContainer {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   width: 80%;
+  .header {
+    padding: 5px 0;
 
-  h1 {
-    font-size: 150%;
-    font-family: 'Handel Gothic';
+    h1 {
+      font-size: 150%;
+      font-family: 'Handel Gothic';
+    }
   }
   
   b {

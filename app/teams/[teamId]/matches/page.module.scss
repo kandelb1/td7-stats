@@ -6,6 +6,12 @@
   align-items: center;
   // border: 1px solid red;
   width: 100%;
+  
+  h1 {
+    color: yellow;
+    font-family: 'Handel Gothic';
+    font-size: 150%;
+  }
 
   .match {
     display: flex;
@@ -29,6 +35,10 @@
         color: inherit;
         color: yellow;
         font-size: inherit;
+
+        &:hover {
+          color: white;
+        }
       }
 
       h2 {

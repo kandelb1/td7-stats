@@ -2,6 +2,7 @@ import Link from 'next/link';
 import './globals.scss'
 import styles from './page.module.scss';
 import Image from "next/image";
+import Navbar from './components/Navbar/Navbar';
 
 export default function RootLayout({
   children,
@@ -17,11 +18,11 @@ export default function RootLayout({
 			        <img src={'/td_top_logo.png'} width={126} height={96} alt={'ql logo'} className={styles.logo}/>
             </Link>
           </div>          
-          <nav className={styles.navBar}>
-            <Link href="/teams">Teams</Link>
-            <Link href="/players">Players</Link>
-            <Link href="/games">Games</Link>
-          </nav>
+          <Navbar entries={[
+            {name: 'Teams', link: '/teams'},
+            {name: 'Players', link: '/players'}
+            ]}
+          />
         </header>
         <div className={styles.topLevelDiv}>
           {children}

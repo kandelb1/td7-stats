@@ -39,25 +39,6 @@
         background-color: transparent;
       }
     }
-
-    .navBar {
-      display: flex;
-      flex-flow: row nowrap;
-      align-items: center;
-      gap: 1em;
-	    padding-left: 100px;
-      background-color:rgb(33, 34, 34);
-      height: 2em;
-
-      a {
-        // font-family: HandelGothic;
-        text-decoration: none;
-        color: $gray;
-        &:hover {
-          background-color: black;
-        }
-      }
-    }
   }
 
   .topLevelDiv {
