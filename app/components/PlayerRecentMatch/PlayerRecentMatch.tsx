@@ -2,18 +2,7 @@ import Image from "next/image";
 import styles from './page.module.scss';
 import ImageFallback from "../ImageFallback/ImageFallback";
 import Link from "next/link";
-
-function formatRank(rank: number): string {
-  switch(rank){
-    case 1:
-      return '1st';
-    case 2:
-      return '2nd'
-    case 3:
-      return '3rd'
-  }
-  return `${rank}th`; // 4-8 is all the same
-}
+import { formatRank } from "@/app/lib/utils";
 
 interface IProps {
   gameId: number;

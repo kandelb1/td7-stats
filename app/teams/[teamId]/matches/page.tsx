@@ -22,19 +22,6 @@ export default async function TeamMatches(props: IProps) {
     return 'Defeat';
   }
 
-  // TODO: duplicate code 
-  function formatRank(rank: number): string {
-    switch(rank){
-      case 1:
-        return '1st';
-      case 2:
-        return '2nd'
-      case 3:
-        return '3rd'
-    }
-    return `${rank}th`; // 4-8 is all the same
-  }
-
   return (
     <div className={styles.matchesContainer}>
       {teamMatches.map(m => {

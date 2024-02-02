@@ -4,19 +4,7 @@ import styles from './page.module.scss';
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import GoodOrBadText from "../GoodOrBadText/GoodOrBadText";
-
-// TODO: duplicate code 
-function formatRank(rank: number): string {
-  switch(rank){
-    case 1:
-      return '1st';
-    case 2:
-      return '2nd'
-    case 3:
-      return '3rd'
-  }
-  return `${rank}th`; // 4-8 is all the same
-}
+import { formatRank } from "@/app/lib/utils";
 
 interface IProps {
   match: PlayerRecentMatch;
