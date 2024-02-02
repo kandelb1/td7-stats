@@ -1,0 +1,26 @@
+@import '../../variables';
+
+.navBar {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 1em;
+  background-color:rgb(33, 34, 34);
+  height: 2em;
+  width: 100%;
+
+  a {
+    padding-left: 5px;
+    text-decoration: none;
+    color: $gray;
+    &:hover {
+      color: $td7-dark-blue;
+      text-decoration: underline;
+    }
+  }
+  
+  .active {
+    text-decoration: none;
+    color: $td7-blue;
+  }
+}
