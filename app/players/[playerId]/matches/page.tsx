@@ -16,8 +16,6 @@ export default async function PlayerMatches(props: IProps) {
 
   const matches = await getPlayerRecentMatches(props.params.playerId, teamId);
   if(!matches) notFound();
-  
-  console.log(matches);
 
   return (
     <div className={styles.matchesContainer}>

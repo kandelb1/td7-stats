@@ -35,13 +35,13 @@ export default function PlayerMatch(props: IProps) {
     <Link href={`/games/${props.match.gameId}`} className={styles.match} onClick={handleClick}>
         <div className={styles.map} style={{backgroundImage: `url('/levelshots/${match.mapName}.jpg')`}}>
           <h1>{formatRank(match.rank)}</h1>
-          <h2>{match.teamScore > match.enemyTeamScore ? 'Win' : 'Loss'}</h2>
+          <h2 className={match.teamScore > match.enemyTeamScore ? 'ql2' : 'ql1'}>{match.teamScore > match.enemyTeamScore ? 'Win' : 'Loss'}</h2>
         </div>
         <div className={styles.gameInfo}>
           <h1>{match.mapName}</h1>
           <p>{dateStr}</p>
           <p>{match.serverName}</p>
-          <p>Map {match.mapNumber} vs. <span onClick={handleTeamClick}>{match.enemyTeamName}</span></p>
+          <p>Map {match.mapNumber} vs. {match.enemyTeamName}</p>
         </div>
         <div className={styles.personalInfo}>
           <h1>Personal</h1>
