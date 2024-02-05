@@ -74,6 +74,19 @@ export async function getTeamSummary(teamId: string): Promise<TeamSummary | null
                                   FROM tgStats\
                                   WHERE teamId = ?", teamId);
 
+  let pgStats = await db.get("SELECT coalesce(sum(damageDealt), 0) AS damageDealt, coalesce(sum(damageTaken), 0) AS damageTaken,\
+                              coalesce(sum(kills), 0) AS frags, coalesce(sum(deaths), 0) AS deaths FROM pgStats\
+                              WHERE playerId IN (\
+                                SELECT players.id FROM players\
+                                WHERE teamId = ?\
+                              )", teamId);
+
+  let pwStats = await db.get("SELECT coalesce(sum(shotsFired), 0) AS shots, coalesce(sum(shotsHit), 0) AS hits FROM pwStats\
+                                  WHERE playerId IN (\
+                                    SELECT players.id FROM players\
+                                    WHERE teamId = ?\
+                                  )", teamId);
+
   let mostPlayedMaps = await db.all("SELECT maps.name, count(1) AS totalGames,\
                                     round(count(CASE WHEN tgStats.score > tgStats.enemyScore THEN 1 END) * 1.0 / count(1) * 100, 2) AS winPercentage\
                                     FROM tgStats\
@@ -93,15 +106,19 @@ export async function getTeamSummary(teamId: string): Promise<TeamSummary | null
                             WHERE players.teamId = ?\
                             GROUP BY players.id\
                             ORDER BY gamesPlayed DESC, name", teamId);
-  
-  // TODO: waiting to hear official rules on matchups                      
-  // let recentMatchups = await db.all("");
+
+  let recentMatches = await db.all("SELECT week, score, enemyTeamScore FROM matches\
+                                    WHERE teamId = ?\
+                                    ORDER BY week DESC", teamId)
 
   let answer: TeamSummary = {
     wins: winsAndLosses['wins'],
     losses: winsAndLosses['losses'],
+    ...pgStats,
+    ...pwStats,
     mostPlayedMaps: mostPlayedMaps,
     roster: roster,
+    recentMatches: recentMatches,
   };
   return answer;
 }

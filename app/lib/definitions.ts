@@ -54,9 +54,15 @@ export type ServerStats = {
 export type TeamSummary = {
   wins: number;
   losses: number;
+  frags: number;
+  deaths: number;
+  damageDealt: number;
+  damageTaken: number;
+  hits: number;
+  shots: number;
   mostPlayedMaps: {name: string; totalGames: number; winPercentage: number}[];
   roster: {id: number; name: string; gamesPlayed: number; wins: number; losses: number;}[];
-  // recentMatches: Match[]; TODO: waiting to hear how matches work
+  recentMatches: {week: number; score: number; enemyTeamScore: number;}[];
 }
 
 export type TeamStatistics = {

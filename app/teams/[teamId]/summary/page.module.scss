@@ -1,3 +1,5 @@
+@import '../../../variables';
+
 .container {
   display: flex;
   flex-flow: column nowrap;
@@ -6,20 +8,38 @@
   width: 100%;
 
   h1 {
-    font-size: 200%;
-    font-family: "Handel Gothic"
+    font-family: 'Handel Gothic';
   }
 
+
   .generalStats {
-    width: 80%;
+    width: 75%;
     height: 15em;
     border: 1px solid black;
     box-shadow: 10px 5px 5px gray;
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
+    // display: flex;
+    // flex-flow: column nowrap;
+    // align-items: center;
     // justify-content: center;
+    text-align: center;
     margin-top: 1em;
+    background-color: rgba(245, 245, 245, 0.5);
+    border-radius: 8px;
+    padding: 5px;
+
+    h1 {
+      font-size: 200%;
+    }
+
+    ul {
+      margin-top: 0.25em;
+      margin-left: 0.25em;
+      text-align: left;
+
+      li {
+        margin: 2px 0;
+      }
+    }
 
     caption {
       // text-align: left;
@@ -38,9 +58,63 @@
     }
   }
 
+  .roster {
+    display: flex;
+    flex-flow: column nowrap;
+    // align-items: center
+    text-align: left;
+    width: 100%;
+    // border: 1px solid red;
+  
+    h1 {
+      font-size: 150%;
+    }
+  
+    a {
+      text-decoration: none;
+      color: inherit;
+      font-size: inherit;
+    }
+  
+    table {
+      // width: 45em;
+    
+      thead {
+        background-color: rgb(65, 64, 64);
+        color: white;
+        th {
+          font-size: 125%;
+          font-family: 'Handel Gothic';
+          padding: 0.5em;
+        } 
+      }
+  
+      tbody {
+        td {
+          font-size: 110%;
+          padding: 0.5em;
+          vertical-align: middle;
+  
+          img {
+            vertical-align: middle;
+          }
+        }
+  
+        tr:nth-child(odd) {
+          background-color: rgba(113, 195, 233, 0.575);
+          // background-color: $td7-blue;
+        }
+  
+        tr:hover {
+          background-color: orange;
+        }
+      }
+    }
+  }
+
   .recentMatchesContainer {
     text-align: left;
-    width: 80%;
+    width: 100%;
     margin-top: 1em;
 
     h1 {
