@@ -33,9 +33,12 @@
     tbody {
       td {
         display: table-cell;
+        vertical-align: middle;
+        padding: 4px;
 
         img {
           vertical-align: middle;
+          padding: 8px;
         }
       }
 
