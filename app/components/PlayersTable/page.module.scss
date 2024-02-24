@@ -1,12 +1,9 @@
 .playerList {
-  // height: 50em;
-  // overflow-y: scroll;
-  display: flex;
-  flex-flow: column nowrap;
-  gap: 1em;
+  width: 100%;
+  padding-inline: 16px;
 
   .inputBox {
-    margin-top: 1em;
+    padding-block: 16px;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -14,7 +11,7 @@
   }
 
   table {
-    width: 60em;
+    width: 100%;
     text-align: left;
 
     a {
@@ -35,13 +32,15 @@
 
     tbody {
       td {
-        font-size: 110%;
-        padding: 0.5em;
-        vertical-align: middle;
+        display: table-cell;
 
         img {
           vertical-align: middle;
         }
+      }
+
+      tr {
+        display: table-row;
       }
 
       tr:nth-child(odd) {
