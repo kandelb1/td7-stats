@@ -19,7 +19,7 @@ export type Map = {
 // }
 
 export type Player = {
-  id: number;
+  id: string;
   name: string;
   teamId: number;
   teamName: string;
@@ -45,7 +45,7 @@ export type WeaponStats = {
 }
 
 export type ServerStats = {
-  id: number;
+  id: string;
   name: string;
   wins: number;
   losses: number;
@@ -61,7 +61,7 @@ export type TeamSummary = {
   hits: number;
   shots: number;
   mostPlayedMaps: {name: string; totalGames: number; winPercentage: number}[];
-  roster: {id: number; name: string; gamesPlayed: number; wins: number; losses: number;}[];
+  roster: {id: string; name: string; gamesPlayed: number; wins: number; losses: number;}[];
   recentMatches: {week: number; score: number; enemyTeamScore: number;}[];
 }
 
@@ -78,7 +78,7 @@ export type TeamMatch = {
   enemyTeamName: string;    
   enemyTeamScore: number;
   games: {
-    id: number;
+    id: string;
     date: number;
     mapName: string;
     mapNumber: number;
@@ -86,7 +86,7 @@ export type TeamMatch = {
     enemyScore: number;
     serverName: string;
     roster: {
-      playerId: number;
+      playerId: string;
       name: string;
       rank: number;
     }[];
@@ -94,7 +94,7 @@ export type TeamMatch = {
 }
 
 export type PlayerGame = {
-  id: number;
+  id: string;
   date: number;
   map: string;
   teamScore: number;
@@ -121,9 +121,9 @@ export type PlayerSummary = {
   shots: number;
   damageDealt: number;
   damageTaken: number;
-  recentAwards: {name: string; id: number; description: string; gameId: number; date: number, mapNumber: number; enemyClanTag: string}[];
-  recentMatches: {date: number, gameId: number; map: string; playerRank: number; teamScore: number; enemyTeamScore: number}[];
-  recentCompetitors: {playerId: number; name: string;}[];
+  recentAwards: {name: string; id: number; description: string; gameId: string; date: number, mapNumber: number; enemyClanTag: string}[];
+  recentMatches: {date: number, gameId: string; map: string; playerRank: number; teamScore: number; enemyTeamScore: number}[];
+  recentCompetitors: {playerId: string; name: string;}[];
 }
 
 export type GameInfo = {
@@ -144,7 +144,7 @@ export type TeamGameInfo = {
 }
 
 export type PlayerGameStats = {
-  playerId: number;
+  playerId: string;
   playerName: string;
   score: number;
   kills: number;
@@ -165,7 +165,7 @@ export type PlayerAward = {
 
 export type PlayerRecentMatch = {
   date: number;
-  gameId: number;
+  gameId: string;
   enemyTeamName: string;
   enemyTeamId: number;
   enemyTeamScore: number;

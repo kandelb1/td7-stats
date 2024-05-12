@@ -1,7 +1,14 @@
+@import '../../variables';
+
 .match {
   width: 192px;
   height: 108px;
   text-align: center;
+  border: 2px solid transparent;
+
+  &:hover {
+    border: 2px inset $row-highlight;
+  }
 
   a {
     text-decoration: none;

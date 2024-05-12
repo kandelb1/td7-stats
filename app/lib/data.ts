@@ -329,6 +329,8 @@ export async function getPlayerSummary(playerId: string, teamId: string): Promis
                                     ORDER BY games.date DESC\
                                     LIMIT 4", playerId, teamId);
 
+  // console.log                                    
+
   let recentCompetitors = await db.all("SELECT players.id AS playerId, players.name FROM players\
                                         INNER JOIN pgStats ON pgStats.playerId = players.id\
                                         INNER JOIN games ON pgStats.gameId = games.id\
@@ -398,10 +400,14 @@ export async function getGameInfo(gameId: string): Promise<GameInfo | null> {
     return null;
   }
 
+
+
   let basicInfo = await db.get("SELECT games.date, games.mapNum, maps.name AS mapName, servers.name AS server FROM games\
                               INNER JOIN maps ON maps.id = games.mapId\
                               INNER JOIN servers ON servers.id = games.serverId\
                               WHERE games.id = ?", gameId);
+  console.log('TEST');
+  console.log(basicInfo);
   
   let teams = await db.all("SELECT tgStats.teamId, teams.name AS teamName, teams.clanTag, tgStats.score, tgstats.color FROM tgStats\
                           INNER JOIN teams ON teams.id = tgStats.teamId\
