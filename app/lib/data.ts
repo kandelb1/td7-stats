@@ -107,11 +107,16 @@ export async function getTeamSummary(teamId: string): Promise<TeamSummary | null
                             GROUP BY players.id\
                             ORDER BY gamesPlayed DESC, name", teamId);
 
-  let recentMatches = await db.all("SELECT week, score, enemyTeamScore FROM matches\
+  let recentMatches = await db.all("SELECT week, score, enemyTeamScore, clanTag FROM matches\
+                                    INNER JOIN teams ON teams.id = matches.enemyTeamId\
                                     WHERE teamId = ?\
-                                    ORDER BY week DESC", teamId)
+                                    ORDER BY week DESC\
+                                    LIMIT 5", teamId);
+  
+  let division = await db.get("SELECT division FROM teams WHERE id = ?", teamId);  
 
   let answer: TeamSummary = {
+    division: division['division'],
     wins: winsAndLosses['wins'],
     losses: winsAndLosses['losses'],
     ...pgStats,

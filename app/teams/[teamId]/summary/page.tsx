@@ -22,7 +22,6 @@ export default async function TeamSummary(props: IProps) {
   function commaString(n: number): string {
     return n.toLocaleString('en-US');
   }
-
   
   return (
     <div className={styles.container}>
@@ -87,7 +86,8 @@ export default async function TeamSummary(props: IProps) {
         <div className={styles.matches}>
           {teamSummary.recentMatches.map(m => {
             return (
-              <div className={styles.match}>
+              <div className={`${styles.match} ${teamSummary.division == 1 ? styles.redBg : styles.blueBg}`}>
+                <h1>{m.clanTag}</h1>
                 <p>{m.score} to {m.enemyTeamScore}</p>
                 <p>{m.score > m.enemyTeamScore ? 'Win' : 'Loss'}</p>
               </div>

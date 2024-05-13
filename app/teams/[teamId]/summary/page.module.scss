@@ -126,20 +126,34 @@
       flex-flow: row;
       gap: 5em;
 
-      .match {
-        width: 128px;
-        height: 128px;
-        background-image: url('../../../../public/placeholder_teamlogo.png');
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: 128px 128px;
+      .match {        
+        min-width: 110px;
+        min-height: 128px;
+        max-width: 110px; 
+        max-height: 128px;
         
         p {
           position: relative;
           background-color: rgba(219, 216, 216, 0.7);
-          top: 75%;
+          top: 58%;
           text-align: center;
         }
+        
+        h1 {
+          font-size: 150%;
+          text-align: center;
+          position: relative;
+          top: 40%;
+          color: rgb(216, 204, 204);
+        }
+      }
+
+      .redBg {
+        background-color: rgb(120, 31, 31);
+      }
+
+      .blueBg {
+        background-color: rgb(31, 31, 105);
       }
     }
   }

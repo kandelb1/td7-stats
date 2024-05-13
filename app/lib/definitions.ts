@@ -52,6 +52,7 @@ export type ServerStats = {
 }
 
 export type TeamSummary = {
+  division: number;
   wins: number;
   losses: number;
   frags: number;
@@ -62,7 +63,7 @@ export type TeamSummary = {
   shots: number;
   mostPlayedMaps: {name: string; totalGames: number; winPercentage: number}[];
   roster: {id: string; name: string; gamesPlayed: number; wins: number; losses: number;}[];
-  recentMatches: {week: number; score: number; enemyTeamScore: number;}[];
+  recentMatches: {week: number; score: number; enemyTeamScore: number; clanTag: string}[];
 }
 
 export type TeamStatistics = {
