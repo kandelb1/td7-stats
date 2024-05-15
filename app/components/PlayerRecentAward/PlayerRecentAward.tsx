@@ -7,7 +7,7 @@ interface IProps {
   name: string;
   id: number;
   description: string;
-  gameId: number;
+  gameId: string;
   date: number;
   mapNumber: number;
   enemyClanTag: string;

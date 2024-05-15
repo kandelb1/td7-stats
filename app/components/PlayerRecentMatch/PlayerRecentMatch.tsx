@@ -5,7 +5,7 @@ import Link from "next/link";
 import { formatRank } from "@/app/lib/utils";
 
 interface IProps {
-  gameId: number;
+  gameId: string;
   playerRank: number;
   map: string;
   teamScore: number;

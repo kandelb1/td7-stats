@@ -3,7 +3,7 @@ import styles from './page.module.scss';
 import Image from 'next/image';
 
 interface IProps {
-  playerId: number;
+  playerId: string;
   playerName: string;
 }
 
