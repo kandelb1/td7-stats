@@ -417,7 +417,7 @@ export async function getGameInfo(gameId: string): Promise<GameInfo | null> {
   let teams = await db.all("SELECT tgStats.teamId, teams.name AS teamName, teams.clanTag, tgStats.score, tgstats.color FROM tgStats\
                           INNER JOIN teams ON teams.id = tgStats.teamId\
                           WHERE tgStats.gameId = ?\
-                          ORDER BY score DESC", gameId);
+                          ORDER BY color DESC", gameId);
 
   for(let i = 0; i < 2; i++) {
     let teamPlayers = await db.all("SELECT players.id AS playerId, playerNames.name AS playerName, pgStats.score, pgStats.kills,\
