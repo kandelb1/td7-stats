@@ -41,6 +41,9 @@ export default function TeamMapChart(props: IProps) {
         stacked: true,
       }
     },
+    ticks: {
+      stepSize: 1,
+    },
     maintainAspectRatio: false,
   };
 
