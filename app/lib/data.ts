@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { Database, open } from 'sqlite'
-import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAward, PlayerRecentMatch, TeamMatch } from './definitions';
+import { Player, Team, PlayerInfo, PlayerSummary, TeamSummary, TeamStatistics, GameInfo, TeamGameInfo, PlayerAward, PlayerRecentMatch, TeamMatch, PlayerStatistics } from './definitions';
 
 let db: Database<sqlite3.Database, sqlite3.Statement>;
 
@@ -512,6 +512,57 @@ export async function getPlayerRecentMatches(playerId: string, teamId: string): 
                           ORDER BY date DESC", playerId, teamId);
 
   return test;
+}
+
+export async function getPlayerStatistics(playerId: string): Promise<PlayerStatistics | null> {
+  if(!db) {
+    console.log('connecting to database');
+    db = await open({
+      filename: './stats.db',
+      driver: sqlite3.Database,
+    });
+  }
+
+  // check if this playerId exists before doing anything
+  let validPlayerId = await db.get("SELECT EXISTS(\
+                                  SELECT 1 FROM players\
+                                  WHERE id == ?\
+                                  ) AS valid", playerId);
+  if(validPlayerId['valid'] == 0) { // stop now
+    console.error(`Ignoring invalid playerId: ${playerId}`);
+    return null;
+  }
+
+  let teamId = await getPlayerTeamId(playerId);
+
+  let weaponStats = await db.all("SELECT weaponName, sum(damage) AS damage, sum(kills) AS kills,\
+                                  sum(shotsFired) AS shotsFired, sum(shotsHit) AS shotsHit FROM pwStats\
+                                  WHERE playerId = ?\
+                                  GROUP BY weaponName\
+                                  ORDER BY damage DESC", playerId);
+
+  let mapStats = await db.all("SELECT maps.id, maps.name,\
+                              count(CASE WHEN tgStats.score > enemyScore AND teamId = ? THEN 1 END) AS wins,\
+                              count(CASE WHEN tgStats.score < enemyScore AND teamId = ? THEN 1 END) AS losses\
+                              FROM maps\
+                              INNER JOIN games ON games.mapId = maps.id\
+                              INNER JOIN tgStats ON tgStats.gameId = games.id\
+                              INNER JOIN pgStats ON pgStats.gameId = games.id\
+                              WHERE pgStats.playerId = ?\
+                              GROUP BY maps.id\
+                              ORDER BY maps.name", teamId, teamId, playerId);
+
+  let generalStats: any = await db.get("SELECT COALESCE(avg(kills), 0) AS averageKills, COALESCE(avg(deaths), 0) AS averageDeaths, COALESCE(avg(score), 0) AS averageScore,\
+                                        COALESCE(avg(rank), 0) AS averageRank, COALESCE(avg(damageDealt), 0) AS averageDamageDealt, COALESCE(avg(damageTaken), 0) AS averageDamageTaken\
+                                        FROM pgStats\
+                                        WHERE pgStats.playerId = ?", playerId);
+
+  let answer: PlayerStatistics = {
+    generalStats: generalStats,
+    weaponStats: weaponStats,
+    mapStats: mapStats,
+  };
+  return answer;
 }
 
 export async function getAllPlayerIds() {

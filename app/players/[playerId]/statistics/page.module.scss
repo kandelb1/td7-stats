@@ -1,0 +1,28 @@
+.container {
+  border: 1px solid red;
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+
+  .topContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    border: 1px solid green;
+    width: 100%;
+    height: 25em;
+
+    .averages {
+      flex: 1;
+      border: 1px solid purple;
+      padding: 5px;
+      border-radius: 10px;
+    }
+    
+    .weaponStats {
+      flex: 1;
+      border: 1px solid yellow;
+    }
+  }
+
+}

@@ -21,6 +21,7 @@ export default async function PlayerPageLayout({
       <h1>{playerInfo.name} (plays for {playerInfo.teamName})</h1>
       <Navbar entries={[
         {name: 'Summary', link: `/players/${params.playerId}/summary`},
+        {name: 'Statistics', link: `/players/${params.playerId}/statistics`},
         {name: 'Awards', link: `/players/${params.playerId}/awards`},
         {name: 'Matches', link: `/players/${params.playerId}/matches`},
         ]}

@@ -181,3 +181,16 @@ export type PlayerRecentMatch = {
   damageDealt: number;
   damageTaken: number;
 }
+
+export type PlayerStatistics = {
+  generalStats: {
+    averageScore: number;
+    averageKills: number;
+    averageDeaths: number;
+    averageRank: number; // rank on scoreboard, 1-8
+    averageDamageDealt: number;
+    averageDamageTaken: number;
+  },
+  weaponStats: WeaponStats[],
+  mapStats: MapStats[],
+}
